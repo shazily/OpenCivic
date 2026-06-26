@@ -20,5 +20,3 @@ plugins:
   - cors
   - proxy-rewrite
   - forward-auth
-  - prometheus
-  - opentelemetry

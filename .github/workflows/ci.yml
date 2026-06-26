@@ -112,7 +112,13 @@ jobs:
           echo "EDGE_AUTH_ENABLED=true" >> .env
           echo "GATEWAY_AUTH_SECRET=ci-gateway-secret" >> .env
           echo "OPENCIVIC_GATEWAY_PORT=8088" >> .env
-          docker compose -f docker-compose.dev.yml up -d postgres valkey minio api apisix nginx
+          docker compose -f docker-compose.dev.yml up -d postgres valkey minio
+          timeout 60 bash -c 'until docker compose -f docker-compose.dev.yml exec -T postgres pg_isready -U opencivic -d opencivic; do sleep 2; done'
+          docker compose -f docker-compose.dev.yml run --rm --no-deps \
+            -e DATABASE_MIGRATION_URL=postgresql+asyncpg://opencivic:testpassword123@postgres:5432/opencivic \
+            -e POSTGRES_PASSWORD=testpassword123 \
+            api alembic upgrade head
+          docker compose -f docker-compose.dev.yml up -d api apisix nginx
           timeout 180 bash -c 'until curl -sf http://127.0.0.1:8088/api/v1/health/live; do sleep 5; done'
 
       - name: Set up Python 3.12

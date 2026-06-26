@@ -10,6 +10,7 @@ x-api-environment: &api-environment
   AI_MODE: disabled
   DOCS_ENABLED: "true"
   DATABASE_MIGRATION_URL: postgresql+asyncpg://opencivic:${POSTGRES_PASSWORD}@postgres:5432/opencivic
+  DATABASE_MIGRATION_URL: postgresql+asyncpg://opencivic:${POSTGRES_PASSWORD}@postgres:5432/opencivic
   DATABASE_URL: postgresql+asyncpg://opencivic_app:${POSTGRES_PASSWORD}@postgres:5432/opencivic
   DATABASE_WRITE_URL: postgresql+asyncpg://opencivic_app:${POSTGRES_PASSWORD}@postgres:5432/opencivic
   DATABASE_READ_URL: postgresql+asyncpg://opencivic_app:${POSTGRES_PASSWORD}@postgres:5432/opencivic

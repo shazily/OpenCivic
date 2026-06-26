@@ -166,7 +166,7 @@ def seed_dev_tenant(test_engine, event_loop) -> None:
                         User(
                             id=extra_id,
                             tenant_id=tenant_id,
-                            keycloak_user_id=f"test-{extra_id.hex[:8]}",
+                            keycloak_user_id=f"test-{extra_id}",
                             email=email,
                             name=email.split("@")[0],
                             roles=roles,

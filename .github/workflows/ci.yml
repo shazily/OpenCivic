@@ -158,6 +158,8 @@ jobs:
           AI_MODE: disabled
           CELERY_TASK_ALWAYS_EAGER: "true"
           CLAMAV_ENABLED: "false"
+          EDGE_RATE_LIMIT_ENABLED: "true"
+          GATEWAY_RATE_LIMIT_ENABLED: "true"
         run: pytest tests/test_gateway_auth.py tests/test_gateway_edge_auth.py tests/test_gateway_smoke.py -m gateway -q
 
   helm:

@@ -4,7 +4,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y --no-install-recommends libpq5 curl \
     && rm -rf /var/lib/apt/lists/* \
     && useradd --create-home --shell /bin/bash opencivic
-COPY requirements-dev.txt .
+COPY requirements.txt requirements-dev.txt .
 RUN pip install --no-cache-dir -r requirements-dev.txt
 COPY --chown=opencivic:opencivic . .
 USER opencivic

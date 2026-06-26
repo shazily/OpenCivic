@@ -112,14 +112,14 @@ jobs:
           echo "EDGE_AUTH_ENABLED=true" >> .env
           echo "GATEWAY_AUTH_SECRET=ci-gateway-secret" >> .env
           echo "OPENCIVIC_GATEWAY_PORT=8088" >> .env
-          docker compose -f docker-compose.dev.yml up -d postgres valkey minio
-          timeout 60 bash -c 'until docker compose -f docker-compose.dev.yml exec -T postgres pg_isready -U opencivic -d opencivic; do sleep 2; done'
-          docker compose -f docker-compose.dev.yml run --rm --no-deps \
+          docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml up -d postgres valkey minio
+          timeout 60 bash -c 'until docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml exec -T postgres pg_isready -U opencivic -d opencivic; do sleep 2; done'
+          docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml run --rm --no-deps \
             -e DATABASE_MIGRATION_URL=postgresql+asyncpg://opencivic:testpassword123@postgres:5432/opencivic \
             -e POSTGRES_PASSWORD=testpassword123 \
             api alembic upgrade head
-          docker compose -f docker-compose.dev.yml up -d api apisix nginx frontend || {
-            docker compose -f docker-compose.dev.yml logs apisix
+          docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml up -d api apisix nginx frontend || {
+            docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml logs apisix
             exit 1
           }
           timeout 180 bash -c 'until curl -sf http://127.0.0.1:8088/api/v1/health/live; do sleep 5; done'
@@ -141,6 +141,23 @@ jobs:
           DEV_AUTH_TOKEN: dev-local-token-change-me
           GATEWAY_AUTH_SECRET: ci-gateway-secret
           EDGE_AUTH_ENABLED: "true"
+          POSTGRES_PASSWORD: testpassword123
+          DATABASE_MIGRATION_URL: postgresql+asyncpg://opencivic:testpassword123@127.0.0.1:5433/opencivic
+          DATABASE_URL: postgresql+asyncpg://opencivic_app:testpassword123@127.0.0.1:5433/opencivic
+          DATABASE_WRITE_URL: postgresql+asyncpg://opencivic_app:testpassword123@127.0.0.1:5433/opencivic
+          DATABASE_READ_URL: postgresql+asyncpg://opencivic_app:testpassword123@127.0.0.1:5433/opencivic
+          VALKEY_URL: redis://:testpassword123@127.0.0.1:6379/0
+          SECRET_KEY: testsecretkey32charsminimumhere1
+          DEV_AUTH_ENABLED: "true"
+          DEV_TENANT_ID: 00000000-0000-0000-0000-000000000001
+          DEV_USER_ID: 00000000-0000-0000-0000-000000000002
+          DEV_LICENCE_ID: 00000000-0000-0000-0000-000000000003
+          DEV_STEWARD_USER_ID: 00000000-0000-0000-0000-000000000010
+          DEV_ADMIN_USER_ID: 00000000-0000-0000-0000-000000000011
+          DEV_DEVELOPER_USER_ID: 00000000-0000-0000-0000-000000000012
+          AI_MODE: disabled
+          CELERY_TASK_ALWAYS_EAGER: "true"
+          CLAMAV_ENABLED: "false"
         run: pytest tests/test_gateway_auth.py tests/test_gateway_edge_auth.py tests/test_gateway_smoke.py -m gateway -q
 
   helm:

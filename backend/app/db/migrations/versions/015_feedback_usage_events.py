@@ -5,7 +5,7 @@ Revises: 014
 """
 import sqlalchemy as sa
 from alembic import op
-from sqlalchemy.dialects.postgresql import ARRAY, UUID
+from sqlalchemy.dialects.postgresql import UUID
 
 revision = "015"
 down_revision = "014"

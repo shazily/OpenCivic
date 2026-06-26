@@ -9,7 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
-from app.db.models import Plan, Tenant
+from app.db.models import Plan
 from app.services.auth.edge_rate_limit import cache_tenant_rate_limit
 
 logger = structlog.get_logger(__name__)

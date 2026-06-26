@@ -15,8 +15,8 @@ def run_async(coro: Coroutine[object, object, T]) -> T:
     Always uses asyncio.run() in the worker process so asyncpg engines are bound
     to a single fresh loop per task invocation.
     """
-    from app.core.cache import reset_cache_client
     import app.db.session as session_module
+    from app.core.cache import reset_cache_client
 
     session_module.engine = None
     session_module.read_engine = None

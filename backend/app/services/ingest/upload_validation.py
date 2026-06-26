@@ -18,7 +18,6 @@ _ALLOWED_MIME_TYPES = {
     "application/x-ndjson",
     "application/jsonl",
     "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "application/vnd.ms-excel",
     "application/octet-stream",
     "application/x-parquet",
     "application/pdf",

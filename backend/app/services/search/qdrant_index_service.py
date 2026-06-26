@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import uuid
-
 import structlog
 
 from app.core.config import settings

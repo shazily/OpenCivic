@@ -7,7 +7,7 @@ from fastapi import APIRouter, status
 from app.api.v1.dependencies.permissions import DeveloperRequired
 from app.db.session import ReadSession, WriteSession
 from app.repositories.api_key_repository import ApiKeyRepository
-from app.schemas.api_key import ApiKeyCreateRequest, ApiKeyCreatedResponse, ApiKeyResponse
+from app.schemas.api_key import ApiKeyCreatedResponse, ApiKeyCreateRequest, ApiKeyResponse
 
 router = APIRouter()
 

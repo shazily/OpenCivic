@@ -4,7 +4,7 @@ import uuid
 
 import structlog
 
-from app.core.errors import StorageError, SchemaDriftDetected
+from app.core.errors import SchemaDriftDetected, StorageError
 from app.db.session import tenant_write_session
 from app.repositories.dataset_repository import DatasetRepository
 from app.repositories.dataset_version_repository import DatasetVersionRepository

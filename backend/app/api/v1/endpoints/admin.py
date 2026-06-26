@@ -231,7 +231,10 @@ async def admin_jobs_summary(
     current_user: AdminRequired,
 ) -> dict:
     """Celery queue depths from Valkey broker with optional Flower worker count."""
-    from app.services.platform.celery_queue_service import depth_trend_stub, get_celery_queue_snapshots
+    from app.services.platform.celery_queue_service import (
+        depth_trend_stub,
+        get_celery_queue_snapshots,
+    )
 
     snapshots, source, worker_count = await get_celery_queue_snapshots()
     queues = [

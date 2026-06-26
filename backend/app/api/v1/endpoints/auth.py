@@ -20,7 +20,10 @@ from app.db.models import User
 from app.db.session import AsyncReadSession, ReadSession, _ensure_engines, set_tenant_context
 from app.services.auth.jwt_claims import decode_jwt_payload, extract_roles_and_staff_role
 from app.services.auth.keycloak_client import KeycloakTokenClient
-from app.services.auth.keycloak_session_index import register_keycloak_refresh, unregister_keycloak_refresh
+from app.services.auth.keycloak_session_index import (
+    register_keycloak_refresh,
+    unregister_keycloak_refresh,
+)
 from app.services.auth.refresh_service import RefreshService
 from app.services.auth.user_resolver import resolve_user_from_claims
 

@@ -1,6 +1,7 @@
 """Feedback API — public submit, publisher/steward list."""
 
 import uuid
+from typing import Annotated
 
 from fastapi import APIRouter, Query, status
 
@@ -47,7 +48,7 @@ async def submit_feedback(
 async def list_feedback(
     session: ReadSession,
     current_user: AuthRequired,
-    dataset_id: uuid.UUID = Query(...),
+    dataset_id: Annotated[uuid.UUID, Query()],
 ) -> dict:
     """List feedback for a dataset (publisher or steward)."""
     repo = DatasetRepository(session)

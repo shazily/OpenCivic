@@ -21,7 +21,6 @@ class MinioS3Connector(ConnectorBase):
     """Pull tabular files (CSV or JSON) from an S3-compatible bucket prefix."""
 
     def _client(self):
-        import asyncio
 
         import boto3
         from botocore.client import Config

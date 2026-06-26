@@ -5,14 +5,14 @@ from __future__ import annotations
 import uuid
 
 import structlog
-from fastapi import APIRouter, Depends, Header, Query, Request
+from fastapi import APIRouter, Depends, Query, Request
 from pydantic import BaseModel, Field
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.v1.dependencies.scim_auth import require_scim_token
 from app.core.config import settings
-from app.core.errors import AuthenticationRequired, NotFound, ValidationError
+from app.core.errors import NotFound, ValidationError
 from app.db.models import User
 from app.db.session import tenant_write_session
 from app.services.auth import scim_service

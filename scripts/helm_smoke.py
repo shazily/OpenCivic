@@ -22,8 +22,8 @@ REQUIRED_RENDERED = (
     "secretName: opencivic-tls",
     "kind: StatefulSet",
     "volumeClaimTemplates:",
-    "opencivic-smoke-pgbackrest-backup",
-    "opencivic-smoke-pgbackrest-verify",
+    "opencivic-smoke-opencivic-pgbackrest-backup",
+    "opencivic-smoke-opencivic-pgbackrest-verify",
     "pgbackrest-config",
 )
 

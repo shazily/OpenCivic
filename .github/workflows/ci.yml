@@ -112,6 +112,8 @@ jobs:
           echo "EDGE_AUTH_ENABLED=true" >> .env
           echo "GATEWAY_AUTH_SECRET=ci-gateway-secret" >> .env
           echo "OPENCIVIC_GATEWAY_PORT=8088" >> .env
+          echo "EDGE_RATE_LIMIT_ENABLED=true" >> .env
+          echo "GATEWAY_RATE_LIMIT_ENABLED=true" >> .env
           docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml up -d postgres valkey minio
           timeout 60 bash -c 'until docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml exec -T postgres pg_isready -U opencivic -d opencivic; do sleep 2; done'
           docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml run --rm --no-deps \

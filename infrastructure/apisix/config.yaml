@@ -1,7 +1,7 @@
 apisix:
   node_listen: 9080
   enable_ipv6: false
-  enable_control: true
+  enable_admin: false
   router:
     http: radixtree_uri
 deployment:
@@ -13,10 +13,6 @@ deployment:
       ip: 127.0.0.1
       port: 9180
 plugins:
-  - limit-req
-  - limit-count
-  - key-auth
-  - jwt-auth
   - cors
   - proxy-rewrite
   - forward-auth

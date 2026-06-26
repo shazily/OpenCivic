@@ -9,12 +9,6 @@ routes:
         expose_headers: "X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset,Content-Length"
         allow_credential: true
         max_age: 3600
-      limit-count:
-        count: 120
-        time_window: 60
-        rejected_code: 429
-        key: remote_addr
-        policy: local
       forward-auth:
         uri: "http://api:8000/api/v1/internal/gateway-auth"
         request_headers:

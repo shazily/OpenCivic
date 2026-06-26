@@ -118,7 +118,10 @@ jobs:
             -e DATABASE_MIGRATION_URL=postgresql+asyncpg://opencivic:testpassword123@postgres:5432/opencivic \
             -e POSTGRES_PASSWORD=testpassword123 \
             api alembic upgrade head
-          docker compose -f docker-compose.dev.yml up -d api apisix nginx frontend
+          docker compose -f docker-compose.dev.yml up -d api apisix nginx frontend || {
+            docker compose -f docker-compose.dev.yml logs apisix
+            exit 1
+          }
           timeout 180 bash -c 'until curl -sf http://127.0.0.1:8088/api/v1/health/live; do sleep 5; done'
 
       - name: Set up Python 3.12

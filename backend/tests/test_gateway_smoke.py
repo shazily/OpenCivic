@@ -27,6 +27,6 @@ def test_health_live_via_gateway() -> None:
 @pytest.mark.gateway
 @pytest.mark.skipif(not _gateway_reachable(), reason="gateway not reachable")
 def test_rate_limit_headers_present() -> None:
-    response = httpx.get(f"{GATEWAY_BASE.rstrip('/')}/api/v1/health/live", timeout=5.0)
+    response = httpx.get(f"{GATEWAY_BASE.rstrip('/')}/api/v1/datasets", timeout=5.0)
     assert response.status_code == 200
     assert response.headers.get("X-RateLimit-Limit") is not None

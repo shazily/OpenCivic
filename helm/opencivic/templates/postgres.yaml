@@ -1,0 +1,67 @@
+{{- if .Values.postgres.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "opencivic.fullname" . }}-postgres
+  labels:
+    app.kubernetes.io/name: {{ include "opencivic.name" . }}
+    app.kubernetes.io/component: postgres
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.postgres.service.port }}
+      targetPort: postgres
+      name: postgres
+  selector:
+    app.kubernetes.io/name: {{ include "opencivic.name" . }}
+    app.kubernetes.io/component: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "opencivic.fullname" . }}-postgres
+  labels:
+    app.kubernetes.io/name: {{ include "opencivic.name" . }}
+    app.kubernetes.io/component: postgres
+spec:
+  serviceName: {{ include "opencivic.fullname" . }}-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "opencivic.name" . }}
+      app.kubernetes.io/component: postgres
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "opencivic.name" . }}
+        app.kubernetes.io/component: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.postgres.auth.username | quote }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "opencivic.fullname" . }}-postgres
+                  key: password
+            - name: POSTGRES_DB
+              value: {{ .Values.postgres.auth.database | quote }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: {{ .Values.postgres.persistence.size }}
+{{- end }}

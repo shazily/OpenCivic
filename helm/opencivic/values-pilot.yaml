@@ -1,0 +1,17 @@
+# Pilot / Tier B Helm values — enable backup jobs and document storage wiring.
+postgres:
+  backup:
+    enabled: true
+    verify:
+      enabled: true
+    stanza: opencivic
+    repo:
+      type: s3
+      path: /pgbackrest
+      s3:
+        bucket: opencivic
+        endpoint: minio:9000
+
+ingress:
+  enabled: true
+  tls: true

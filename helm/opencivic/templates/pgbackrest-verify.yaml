@@ -1,0 +1,42 @@
+{{- if and .Values.postgres.enabled .Values.postgres.backup.verify.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "opencivic.fullname" . }}-pgbackrest-verify
+  labels:
+    app.kubernetes.io/name: {{ include "opencivic.name" . }}
+    app.kubernetes.io/component: backup-verify
+spec:
+  schedule: {{ .Values.postgres.backup.verify.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: pgbackrest
+              image: "{{ .Values.postgres.backup.image.repository }}:{{ .Values.postgres.backup.image.tag }}"
+              imagePullPolicy: {{ .Values.postgres.backup.image.pullPolicy }}
+              env:
+                - name: PGBACKREST_STANZA
+                  value: {{ .Values.postgres.backup.stanza | quote }}
+              volumeMounts:
+                - name: pgbackrest-config
+                  mountPath: /etc/pgbackrest
+                  readOnly: true
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  pgbackrest verify --stanza=$PGBACKREST_STANZA
+                  {{- if .Values.postgres.backup.verify.reportUrl }}
+                  curl -sf -X POST "{{ .Values.postgres.backup.verify.reportUrl }}" \
+                    -H "Content-Type: application/json" \
+                    -H "X-Backup-Verify-Secret: ${BACKUP_VERIFY_HOOK_SECRET}" \
+                    -d "{\"status\":\"ok\",\"message\":\"helm verify completed\"}" || true
+                  {{- end }}
+          volumes:
+            - name: pgbackrest-config
+              configMap:
+                name: {{ include "opencivic.fullname" . }}-pgbackrest-config
+{{- end }}

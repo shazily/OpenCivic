@@ -1,0 +1,56 @@
+# Tier B pilot overlay — Keycloak-first auth, TUS enabled, optional backup profile.
+# Usage: docker compose -f docker-compose.dev.yml -f docker-compose.pilot.yml up
+# Or:    ./deploy.sh pilot up
+
+x-pilot-api-environment: &pilot-api-environment
+  KEYCLOAK_ENABLED: "true"
+  DEV_AUTH_ENABLED: "false"
+  TUS_ENABLED: "true"
+  KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-pilot-client-secret-change-me}
+  PGBACKREST_ENABLED: ${PGBACKREST_ENABLED:-false}
+  PGBACKREST_STANZA: ${PGBACKREST_STANZA:-opencivic}
+
+services:
+  api:
+    environment:
+      <<: *pilot-api-environment
+
+  worker:
+    environment:
+      <<: *pilot-api-environment
+
+  beat:
+    environment:
+      <<: *pilot-api-environment
+
+  tusd:
+    profiles: []
+    depends_on:
+      api:
+        condition: service_healthy
+
+  pgbackrest:
+    image: pgbackrest/pgbackrest:2.51
+    container_name: opencivic-dev-pgbackrest
+    profiles: [backup]
+    environment:
+      PGBACKREST_STANZA: ${PGBACKREST_STANZA:-opencivic}
+      PGBACKREST_REPO1_S3_ENDPOINT: http://minio:9000
+      PGBACKREST_REPO1_S3_BUCKET: opencivic
+      PGBACKREST_REPO1_S3_KEY: ${MINIO_ACCESS_KEY}
+      PGBACKREST_REPO1_S3_KEY_SECRET: ${MINIO_SECRET_KEY}
+      PGBACKREST_REPO1_TYPE: s3
+      PGBACKREST_REPO1_PATH: /pgbackrest
+      PGBACKREST_PG1_HOST: postgres
+      PGBACKREST_PG1_PORT: "5432"
+      PGBACKREST_PG1_USER: opencivic
+      PGBACKREST_PG1_DATABASE: opencivic
+      PGBACKREST_PG1_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ./infrastructure/pgbackrest/pgbackrest.conf:/etc/pgbackrest/pgbackrest.conf:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    networks: [opencivic-dev]

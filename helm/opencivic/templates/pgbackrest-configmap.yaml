@@ -1,0 +1,23 @@
+{{- if and .Values.postgres.enabled .Values.postgres.backup.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "opencivic.fullname" . }}-pgbackrest-config
+  labels:
+    app.kubernetes.io/name: {{ include "opencivic.name" . }}
+    app.kubernetes.io/component: backup
+data:
+  pgbackrest.conf: |
+    [global]
+    repo1-type={{ .Values.postgres.backup.repo.type }}
+    repo1-path={{ .Values.postgres.backup.repo.path }}
+    {{- if eq .Values.postgres.backup.repo.type "s3" }}
+    repo1-s3-bucket={{ .Values.postgres.backup.repo.s3.bucket }}
+    repo1-s3-endpoint={{ .Values.postgres.backup.repo.s3.endpoint }}
+    repo1-s3-uri-style=path
+    {{- end }}
+    [{{ .Values.postgres.backup.stanza }}]
+    pg1-host={{ include "opencivic.fullname" . }}-postgres
+    pg1-port=5432
+    pg1-database={{ .Values.postgres.auth.database }}
+{{- end }}

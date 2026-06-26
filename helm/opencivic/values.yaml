@@ -1,0 +1,115 @@
+# Default values for OpenCivic Helm chart (self-hosted tier skeleton).
+
+replicaCount: 1
+
+image:
+  api:
+    repository: opencivic/api
+    tag: latest
+    pullPolicy: IfNotPresent
+  frontend:
+    repository: opencivic/frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+
+service:
+  api:
+    type: ClusterIP
+    port: 8000
+  frontend:
+    type: ClusterIP
+    port: 3000
+
+ingress:
+  enabled: false
+  className: nginx
+  host: opencivic.local
+  tls: false
+  tlsSecret: opencivic-tls
+
+env:
+  deploymentMode: selfhosted
+  databaseUrl: postgresql+asyncpg://opencivic:opencivic@opencivic-postgres:5432/opencivic
+  valkeyUrl: redis://:changeme@opencivic-valkey:6379/0
+  qdrantUrl: http://opencivic-qdrant:6333
+  storageProvider: minio
+  storageEndpoint: http://minio:9000
+  storageBucket: opencivic
+  aiMode: assist
+
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "16-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  auth:
+    username: opencivic
+    password: changeme
+    database: opencivic
+  persistence:
+    size: 10Gi
+  backup:
+    enabled: false
+    schedule: "0 2 * * *"
+    stanza: opencivic
+    type: incr
+    image:
+      repository: pgbackrest/pgbackrest
+      tag: "2.51"
+      pullPolicy: IfNotPresent
+    verify:
+      enabled: false
+      schedule: "0 4 * * 0"
+      reportUrl: ""
+    repo:
+      type: s3
+      path: /pgbackrest
+      s3:
+        bucket: opencivic
+        endpoint: minio:9000
+
+valkey:
+  enabled: true
+  image:
+    repository: valkey/valkey
+    tag: "8.0-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  auth:
+    password: changeme
+
+worker:
+  enabled: true
+  replicaCount: 1
+
+qdrant:
+  enabled: true
+  image:
+    repository: qdrant/qdrant
+    tag: "v1.9.1"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6333
+  persistence:
+    size: 5Gi
+
+minio:
+  enabled: true
+  image:
+    repository: minio/minio
+    tag: "RELEASE.2024-05-10T01-41-38Z"
+    pullPolicy: IfNotPresent
+  service:
+    port: 9000
+  auth:
+    accessKey: minioadmin
+    secretKey: minioadmin
+  persistence:
+    enabled: true
+    size: 20Gi
+
+resources: {}

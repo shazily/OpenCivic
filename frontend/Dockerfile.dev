@@ -1,0 +1,9 @@
+# OpenCivic — dev frontend (deps baked at build; source bind-mounted at runtime)
+FROM node:20-alpine
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --quiet
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED=1
+EXPOSE 3000
+CMD ["npm", "run", "dev", "--", "-H", "0.0.0.0", "-p", "3000"]

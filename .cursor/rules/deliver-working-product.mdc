@@ -1,0 +1,14 @@
+---
+description: Agent must verify and deliver working products — never delegate checks to the user
+alwaysApply: true
+---
+
+# Deliver working products
+
+The user does not run verification steps, smoke tests, or manual checks.
+
+- Run migrations, seeds, tests, lint, builds, and smoke scripts yourself before reporting done.
+- Fix failures yourself; do not end with "run X to verify" or "you can test by…".
+- Deliver a working local stack (`./deploy.sh up` or docker compose) with confirmed health — verified by the agent, not the user.
+- If the environment blocks verification (e.g. Docker resource limits), fix or work around it, then re-verify.
+- Report outcomes as facts ("27 tests passed", "API healthy on :8100"), not instructions for the user.

@@ -1,0 +1,27 @@
+{{- if and .Values.postgres.enabled .Values.postgres.backup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ include "opencivic.fullname" . }}-pgbackrest-backup
+  labels:
+    app.kubernetes.io/name: {{ include "opencivic.name" . }}
+    app.kubernetes.io/component: backup
+spec:
+  schedule: {{ .Values.postgres.backup.schedule | quote }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: pgbackrest
+              image: "{{ .Values.postgres.backup.image.repository }}:{{ .Values.postgres.backup.image.tag }}"
+              imagePullPolicy: {{ .Values.postgres.backup.image.pullPolicy }}
+              env:
+                - name: PGBACKREST_STANZA
+                  value: {{ .Values.postgres.backup.stanza | quote }}
+              command:
+                - /bin/sh
+                - -c
+                - pgbackrest backup --stanza=$PGBACKREST_STANZA --type={{ .Values.postgres.backup.type }}
+{{- end }}

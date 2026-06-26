@@ -1,0 +1,19 @@
+apisix:
+  node_listen: 9080
+  enable_ipv6: false
+  router:
+    http: radixtree_uri
+deployment:
+  admin:
+    admin_listen:
+      ip: 127.0.0.1
+      port: 9180
+plugins:
+  - limit-req
+  - limit-count
+  - key-auth
+  - jwt-auth
+  - cors
+  - proxy-rewrite
+  - prometheus
+  - opentelemetry

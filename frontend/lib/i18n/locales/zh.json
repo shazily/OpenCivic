@@ -1,0 +1,424 @@
+{
+  "nav": {
+    "catalog": "目录",
+    "dashboard": "仪表板",
+    "publish": "发布",
+    "notifications": "通知",
+    "signOut": "退出登录"
+  },
+  "public": {
+    "catalog": "目录",
+    "staffSignIn": "工作人员登录"
+  },
+  "catalog": {
+    "title": "开放数据目录",
+    "subtitle": "浏览本门户上已发布的数据集。仅显示已完成审核和发布的数据集。",
+    "skipToContent": "跳至内容",
+    "searchResults": "“{{query}}”的搜索结果",
+    "tagFilter": " · 标签：{{tag}}",
+    "loadError": "无法加载目录：{{message}}",
+    "noMatch": "没有与您搜索匹配的已发布数据集。",
+    "empty": "尚无已发布的数据集。",
+    "staffSignIn": "工作人员登录",
+    "staffSignInHint": "以上传和发布数据。",
+    "featuredTitle": "精选数据集",
+    "featuredSubtitle": "最近发布数据中质量评分最高的条目。",
+    "searchPlaceholder": "搜索数据集…",
+    "search": "搜索",
+    "clear": "清除",
+    "semanticDegraded": "语义搜索暂时不可用 — 仅显示关键词匹配结果。"
+  },
+  "dataset": {
+    "backToCatalog": "← 返回目录",
+    "noDescription": "无描述。",
+    "quality": "质量 {{score}}",
+    "rows": "行数",
+    "views": "浏览量",
+    "downloads": "下载量",
+    "rating": "评分",
+    "previewTitle": "数据预览",
+    "noDataYet": "尚无导入数据。",
+    "previewLoading": "正在加载预览…",
+    "download": "下载",
+    "downloading": "下载中…",
+    "downloadFormat": "格式",
+    "downloadCsv": "CSV",
+    "downloadJson": "JSON",
+    "downloadParquet": "Parquet（预签名链接）",
+    "downloadPreparing": "正在准备文件…",
+    "downloadOpening": "正在打开安全下载…",
+    "downloadEmpty": "没有可下载的数据",
+    "downloadFailed": "下载失败（{{status}}）",
+    "downloadFailedGeneric": "下载失败",
+    "engagementTrend": "14 天互动（浏览 + 下载）",
+    "embedTitle": "嵌入此数据集",
+    "embedDescription": "预览并复制 iframe 或 API 代码片段到您的网站。",
+    "embedIframe": "响应式 iframe",
+    "embedApi": "REST API (curl)",
+    "embedCopy": "复制代码",
+    "embedCopied": "已复制",
+    "apiExplorer": {
+      "title": "API 浏览器",
+      "description": "此数据集的即时 REST 端点与自动生成的 OpenAPI 规范。",
+      "tabRest": "REST 片段",
+      "tabOpenApi": "OpenAPI 规范",
+      "dataEndpoint": "数据 API (curl)",
+      "powershell": "PowerShell",
+      "loading": "正在加载 OpenAPI 规范…",
+      "pathCount": "规范中有 {{count}} 个路径",
+      "fetchSpec": "复制规范 URL",
+      "openDeveloperConsole": "在开发者控制台中打开",
+      "tabOData": "OData",
+      "loadingOData": "正在加载 OData 服务…",
+      "odataVersion": "OData {{version}} 服务",
+      "odataServiceRoot": "服务根",
+      "odataExample": "Excel / Power BI 示例",
+      "odataPowerQuery": "Power Query M (Excel)",
+      "odataMetadata": "$metadata URL"
+    }
+  },
+  "home": {
+    "title": "值得信赖的开放数据",
+    "subtitle": "政府数据集，含审核工作流、质量评分和即时 API。",
+    "publishedDatasets": "已发布数据集",
+    "instantApi": "发布即 API",
+    "instantApiValue": "是",
+    "openLicence": "开放许可",
+    "openLicenceValue": "默认",
+    "trustQuality": "质量评分",
+    "trustReviewed": "人工审核",
+    "trustMachineReadable": "机器可读 API",
+    "browseCatalog": "浏览目录"
+  },
+  "publish": {
+    "title": "发布数据集",
+    "description": "创建草稿并上传 CSV、TSV、JSON、JSONL、XLSX 或 Parquet 文件。摄取完成后提交审核。",
+    "tusHint": "大文件：启用 tus compose 配置文件以在 {{endpoint}} 进行可恢复的 TUS 上传",
+    "titleLabel": "标题",
+    "slugLabel": "标识符",
+    "descriptionLabel": "描述",
+    "fileLabel": "数据文件（CSV、TSV、JSON、JSONL、XLSX、Parquet）",
+    "chooseFile": "请选择要上传的 CSV、TSV、JSON、JSONL、XLSX 或 Parquet 文件。",
+    "creating": "正在创建数据集草稿…",
+    "uploading": "正在上传文件…",
+    "uploadingTus": "正在通过 TUS 上传… {{percent}}%",
+    "processing": "正在处理摄取…",
+    "queued": "上传已排队。请在几秒后刷新数据集页面。",
+    "submit": "发布数据集",
+    "submitting": "正在发布…",
+    "failed": "发布失败"
+  },
+  "language": {
+    "label": "语言",
+    "en": "英语",
+    "ar": "阿拉伯语",
+    "fr": "法语",
+    "es": "西班牙语",
+    "zh": "中文"
+  },
+  "login": {
+    "title": "工作人员登录",
+    "descriptionDev": "开发模式 — 选择角色以访问发布者、管理员、IT 管理员或开发者界面。",
+    "descriptionSso": "使用组织身份提供商登录，或使用开发角色登录。",
+    "ssoButton": "使用 SSO 登录 (Keycloak)",
+    "redirecting": "正在跳转…",
+    "orDevRole": "或使用开发角色继续",
+    "roleLegend": "角色",
+    "continue": "继续",
+    "signingIn": "正在登录…",
+    "signInFailed": "登录失败",
+    "ssoFailed": "SSO 登录失败",
+    "backToCatalog": "返回公共目录",
+    "roles": {
+      "publisher": {
+        "label": "数据发布者",
+        "description": "上传数据集并提交审核"
+      },
+      "steward": {
+        "label": "数据管理员",
+        "description": "审核并批准发布"
+      },
+      "admin": {
+        "label": "组织管理员",
+        "description": "IT 管理控制台和连接器"
+      },
+      "developer": {
+        "label": "开发者",
+        "description": "API 密钥和 OpenAPI 浏览器"
+      }
+    }
+  },
+  "notifications": {
+    "title": "通知中心",
+    "markAllRead": "全部标为已读",
+    "markRead": "标为已读",
+    "loading": "加载中…",
+    "empty": "暂无通知。",
+    "signInRequired": "请登录以查看通知。",
+    "loadFailed": "加载失败",
+    "viewDetails": "查看详情"
+  },
+  "steward": {
+    "shellTitle": "数据管理员",
+    "title": "管理员审核队列",
+    "subtitle": "并排预览数据集、质量信号和每项提交的 SLA 计时器。",
+    "navReview": "审核队列",
+    "navApproval": "高级审批",
+    "accessRequired": "需要管理员权限。请以数据管理员身份登录。",
+    "pendingReview": "待审核",
+    "pendingApproval": "待批准",
+    "changesRequested": "已请求修改",
+    "slaBreached": "SLA 超时",
+    "published30d": "已发布（30天）",
+    "empty": "暂无待审核的提交。",
+    "export": {
+      "button": "导出治理 CSV",
+      "exporting": "正在导出…",
+      "rangeLabel": "报告窗口",
+      "rangeDays": "最近 {{days}} 天"
+    },
+    "approval": {
+      "title": "高级审批队列",
+      "description": "双门工作流：管理员已批准、等待高级审批的数据集。",
+      "accessRequired": "高级审批需要组织管理员权限。",
+      "empty": "暂无等待高级审批的提交。",
+      "pendingBadge": "等待高级审批",
+      "viewDataset": "查看数据集",
+      "stewardNotes": "管理员备注：{{notes}}",
+      "submission": "提交 {{id}}…"
+    },
+    "card": {
+      "submission": "提交 {{id}}…",
+      "publisherNotes": "发布者备注：",
+      "failedLoad": "加载数据集失败",
+      "quality": "质量 {{score}}",
+      "rows": "{{count}} 行",
+      "noDescription": "无描述。",
+      "openDataset": "打开数据集页面",
+      "loading": "正在加载预览…",
+      "sla": {
+        "none": "无 SLA",
+        "breached": "SLA 已超时 {{hours}} 小时",
+        "minutes": "距 SLA 还有 {{minutes}} 分钟",
+        "hours": "距 SLA 还有 {{hours}} 小时"
+      }
+    },
+    "drawer": {
+      "open": "打开详情",
+      "close": "关闭面板",
+      "title": "提交详情",
+      "status": "状态",
+      "submittedAt": "提交时间",
+      "reviewDue": "审核截止",
+      "slaBreached": "SLA 已超时",
+      "yes": "是",
+      "no": "否"
+    }
+  },
+  "admin": {
+    "shellTitle": "IT 管理",
+    "nav": {
+      "overview": "概览",
+      "branding": "品牌",
+      "health": "健康",
+      "connectors": "连接器",
+      "jobs": "任务",
+      "security": "安全"
+    },
+    "overview": {
+      "title": "IT 管理概览",
+      "description": "基础设施健康、连接器与部署元数据。",
+      "tenantUsage": "租户用量",
+      "users": "用户",
+      "datasets": "数据集",
+      "published": "已发布 {{published}}/{{total}}",
+      "apiCalls": "API 调用",
+      "downloads": "下载",
+      "deployment": "部署",
+      "version": "版本",
+      "backup": "备份",
+      "verified": "已验证 {{date}}",
+      "securityEvents": "安全事件（7 天）",
+      "connectors": "连接器",
+      "noConnectors": "未配置连接器。",
+      "viewMatrix": "查看连接器矩阵"
+    },
+    "connectors": {
+      "title": "连接器矩阵",
+      "description": "入站数据源、同步健康状况和熔断器状态。",
+      "total": "连接器总数",
+      "active": "活跃",
+      "paused": "已暂停",
+      "errored": "错误",
+      "circuitOpen": "熔断开启",
+      "empty": "尚未配置连接器。",
+      "name": "名称",
+      "type": "类型",
+      "status": "状态",
+      "circuit": "熔断",
+      "lastSync": "上次同步",
+      "neverSynced": "从未",
+      "actions": "操作"
+    },
+    "health": {
+      "title": "深度健康检查",
+      "description": "仅限管理员的数据库、缓存与对象存储系统检查。",
+      "overallStatus": "总体状态",
+      "checksPassing": "通过检查",
+      "deployment": "部署模式",
+      "version": "版本",
+      "aiMode": "AI 模式",
+      "failingCount": "{{count}} 项检查需要关注。",
+      "empty": "暂无健康数据。"
+    },
+    "jobs": {
+      "title": "Celery 任务队列",
+      "description": "工作队列布局与 Flower 实时监控。",
+      "queueCount": "已配置队列",
+      "monitor": "实时监控",
+      "workerQueues": "工作队列",
+      "priorityTiers": "6 个优先级",
+      "flowerTitle": "Celery Flower 监控",
+      "queueCritical": "紧急操作",
+      "queueIngest": "文件摄取",
+      "queueRefresh": "连接器同步",
+      "queueAi": "AI / 嵌入",
+      "queueNotifications": "告警",
+      "queueMaintenance": "汇总 / DR",
+      "totalDepth": "队列总深度",
+      "dataSource": "指标来源",
+      "placeholder": "占位",
+      "empty": "暂无队列指标。"
+    },
+    "branding": {
+      "title": "白标品牌",
+      "displayName": "显示名称",
+      "primaryColor": "主色",
+      "primaryHover": "主色悬停",
+      "accentColor": "强调色",
+      "logoUrl": "徽标 URL (https)",
+      "preview": "实时预览",
+      "previewHint": "保存后颜色将应用于公共门户。",
+      "sampleButton": "示例按钮",
+      "save": "保存品牌",
+      "saving": "保存中…",
+      "saved": "品牌已保存。",
+      "loading": "加载品牌中…",
+      "loadFailed": "加载失败",
+      "saveFailed": "保存失败"
+    }
+  },
+  "developer": {
+    "shellTitle": "开发者",
+    "nav": {
+      "overview": "概览",
+      "apiKeys": "API 密钥",
+      "webhooks": "Webhooks",
+      "openapi": "OpenAPI",
+      "sdk": "SDK",
+      "rateLimits": "速率限制"
+    },
+    "overview": {
+      "title": "开发者控制台",
+      "description": "管理此租户的 API 密钥和集成工具。",
+      "apiKeyCount": "API 密钥：{{count}}",
+      "quickStart": "快速开始（Python）"
+    },
+    "apiKeys": {
+      "title": "API 密钥",
+      "description": "创建和撤销具有作用域的密钥，以编程方式访问 OpenCivic API。"
+    },
+    "rateLimits": {
+      "title": "速率限制",
+      "description": "各密钥使用量与租户套餐限额对比。",
+      "tenantLimit": "租户限额（次/分钟）",
+      "activeKeys": "活跃 API 密钥",
+      "totalUsed": "上一分钟请求数",
+      "peakUtilization": "峰值利用率",
+      "perMin": "次/分钟",
+      "remaining": "剩余 {{count}} 次 · 已用 {{pct}}%",
+      "empty": "尚无 API 密钥",
+      "emptyDescription": "创建 API 密钥以查看每分钟使用率。"
+    },
+    "explorer": {
+      "title": "OpenAPI 浏览器",
+      "descriptionGlobal": "平台 API 交互式文档（Swagger UI）。",
+      "titleDataset": "数据集 API 浏览器",
+      "descriptionDataset": "已发布数据集的自动生成 OpenAPI 3.1 规范。",
+      "viewDataset": "查看数据集页面",
+      "loading": "正在加载 OpenAPI 规范…",
+      "empty": "暂无 OpenAPI 规范。",
+      "specVersion": "OpenAPI 版本",
+      "apiVersion": "API 版本",
+      "pathCount": "路径数",
+      "iframeTitle": "平台 OpenAPI 文档"
+    }
+  },
+  "search": {
+    "paletteLabel": "命令面板",
+    "palettePlaceholder": "搜索数据集…",
+    "paletteHint": "Ctrl+K · Esc 关闭",
+    "searching": "搜索中…",
+    "noResults": "无结果",
+    "related": "相关",
+    "exactMatch": "精确匹配"
+  },
+  "chat": {
+    "title": "与数据集对话",
+    "description": "就数据提问。回答会在可用时引用底层查询。",
+    "placeholder": "例如：有多少行？有哪些列？",
+    "ask": "提问",
+    "thinking": "思考中…",
+    "failed": "对话失败",
+    "aiBadge": "AI",
+    "confidence": "置信度 {{percent}}%",
+    "lowConfidence": "置信度较低 — 请对照源数据核实。",
+    "citationColumns": "引用列"
+  },
+  "feedback": {
+    "title": "评价此数据集",
+    "ratingLabel": "评分",
+    "stars": "{{count}} 星",
+    "commentLabel": "评论（可选）",
+    "commentPlaceholder": "您如何使用这些数据？",
+    "submit": "提交反馈",
+    "sending": "发送中…",
+    "submitFailed": "提交失败",
+    "thankYou": "谢谢 — 您的反馈已提交。"
+  },
+  "publisher": {
+    "shellTitle": "发布者",
+    "dashboard": {
+      "title": "发布者仪表板",
+      "description": "您的数据集、工作流状态和快捷操作。",
+      "publishNew": "发布新数据集",
+      "loading": "正在加载您的数据集…",
+      "loadFailed": "加载数据集失败",
+      "empty": "尚无数据集",
+      "emptyDescription": "创建草稿并上传文件以开始发布工作流。",
+      "yourDatasets": "您的数据集",
+      "views": "浏览量",
+      "aiQueries": "AI 查询"
+    },
+    "timeline": {
+      "title": "工作流活动",
+      "description": "您数据集上的近期治理事件。",
+      "loading": "正在加载工作流历史…",
+      "loadFailed": "无法加载工作流历史",
+      "empty": "尚无工作流事件。",
+      "viewDataset": "查看数据集"
+    },
+    "staleness": {
+      "title": "{{count}} 个数据集需要关注",
+      "description": "部分数据集可能已过期或等待刷新。",
+      "descriptionStale": "{{stale}} 个数据集已标记为过期 — 请尽快审核并刷新。",
+      "more": "另有 {{count}} 个"
+    },
+    "feedback": {
+      "title": "公众反馈",
+      "loading": "正在加载反馈…",
+      "empty": "您已发布的数据集尚无反馈。",
+      "stars": "{{count}}★"
+    }
+  }
+}

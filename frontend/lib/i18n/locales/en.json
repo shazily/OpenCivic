@@ -1,0 +1,445 @@
+{
+  "nav": {
+    "catalog": "Catalog",
+    "dashboard": "Dashboard",
+    "publish": "Publish",
+    "notifications": "Notifications",
+    "signOut": "Sign out"
+  },
+  "public": {
+    "catalog": "Catalog",
+    "staffSignIn": "Staff sign-in"
+  },
+  "catalog": {
+    "title": "Open Data Catalog",
+    "subtitle": "Browse published datasets on this portal. Only datasets that have completed review and publication appear here.",
+    "skipToContent": "Skip to content",
+    "searchResults": "Search results for \"{{query}}\"",
+    "tagFilter": " · tag: {{tag}}",
+    "loadError": "Could not load catalog: {{message}}",
+    "noMatch": "No published datasets match your search.",
+    "empty": "No published datasets yet.",
+    "staffSignIn": "Staff sign-in",
+    "staffSignInHint": "to upload and publish data.",
+    "featuredTitle": "Featured datasets",
+    "featuredSubtitle": "Highest quality scores among recently published data.",
+    "searchPlaceholder": "Search datasets…",
+    "search": "Search",
+    "clear": "Clear",
+    "semanticDegraded": "Semantic search is temporarily unavailable — showing keyword matches only."
+  },
+  "dataset": {
+    "backToCatalog": "← Back to catalog",
+    "noDescription": "No description provided.",
+    "quality": "Quality {{score}}",
+    "rows": "Rows",
+    "views": "Views",
+    "downloads": "Downloads",
+    "rating": "Rating",
+    "previewTitle": "Data preview",
+    "noDataYet": "No ingested data yet.",
+    "previewLoading": "Loading data preview…",
+    "download": "Download",
+    "downloading": "Downloading…",
+    "downloadFormat": "Format",
+    "downloadCsv": "CSV",
+    "downloadJson": "JSON",
+    "downloadParquet": "Parquet (pre-signed)",
+    "downloadPreparing": "Preparing file…",
+    "downloadOpening": "Opening secure download…",
+    "downloadEmpty": "No data to download",
+    "downloadFailed": "Download failed ({{status}})",
+    "downloadFailedGeneric": "Download failed",
+    "engagementTrend": "14-day engagement (views + downloads)",
+    "connector": {
+      "badge": "Connector: {{name}}",
+      "lastSync": "Last sync: {{when}}",
+      "neverSynced": "Never synced",
+      "frequency": "Refresh: {{frequency}}"
+    },
+    "embedTitle": "Embed this dataset",
+    "embedDescription": "Preview and copy an iframe or API snippet for your site or report.",
+    "embedIframe": "Responsive iframe",
+    "embedApi": "REST API (curl)",
+    "embedCopy": "Copy snippet",
+    "embedCopied": "Copied",
+    "apiExplorer": {
+      "title": "API explorer",
+      "description": "Instant REST endpoint and auto-generated OpenAPI spec for this dataset.",
+      "tabRest": "REST snippets",
+      "tabOpenApi": "OpenAPI spec",
+      "dataEndpoint": "Data API (curl)",
+      "powershell": "PowerShell",
+      "loading": "Loading OpenAPI spec…",
+      "pathCount": "{{count}} path(s) in spec",
+      "fetchSpec": "Copy spec URL",
+      "openDeveloperConsole": "Open in developer console",
+      "tabOData": "OData",
+      "loadingOData": "Loading OData service…",
+      "odataVersion": "OData {{version}} service",
+      "odataServiceRoot": "Service root",
+      "odataExample": "Excel / Power BI example",
+      "odataPowerQuery": "Power Query M (Excel)",
+      "odataMetadata": "$metadata URL"
+    }
+  },
+  "home": {
+    "title": "Open data you can trust",
+    "subtitle": "Government datasets with review workflows, quality scores, and instant APIs — built for citizens and machines.",
+    "publishedDatasets": "Published datasets",
+    "instantApi": "API on publish",
+    "instantApiValue": "Yes",
+    "openLicence": "Open licences",
+    "openLicenceValue": "Default",
+    "trustQuality": "Quality scored",
+    "trustReviewed": "Human-reviewed",
+    "trustMachineReadable": "Machine-readable APIs",
+    "browseCatalog": "Browse catalog"
+  },
+  "publish": {
+    "title": "Publish a dataset",
+    "description": "Create a draft dataset and upload a CSV, TSV, JSON, JSONL, XLSX, or Parquet file. Submit for steward review after ingest completes.",
+    "tusHint": "Large files: enable the tus compose profile for resumable TUS uploads at {{endpoint}}",
+    "titleLabel": "Title",
+    "slugLabel": "Slug",
+    "descriptionLabel": "Description",
+    "fileLabel": "Data file (CSV, TSV, JSON, JSONL, XLSX, Parquet)",
+    "chooseFile": "Choose a CSV, TSV, JSON, JSONL, XLSX, or Parquet file to upload.",
+    "creating": "Creating dataset draft…",
+    "uploading": "Uploading file…",
+    "uploadingTus": "Uploading via TUS… {{percent}}%",
+    "processing": "Processing ingest…",
+    "queued": "Upload queued. Refresh the dataset page in a few seconds.",
+    "submit": "Publish dataset",
+    "submitting": "Publishing…",
+    "failed": "Publish failed"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "ar": "Arabic",
+    "fr": "French",
+    "es": "Spanish",
+    "zh": "Chinese"
+  },
+  "login": {
+    "title": "Staff sign-in",
+    "descriptionDev": "Development mode — select a role to access publisher, steward, admin, or developer surfaces.",
+    "descriptionSso": "Sign in with your organisation identity provider or use development role login.",
+    "ssoButton": "Sign in with SSO (Keycloak)",
+    "redirecting": "Redirecting…",
+    "orDevRole": "or continue with a dev role",
+    "roleLegend": "Role",
+    "continue": "Continue",
+    "signingIn": "Signing in…",
+    "signInFailed": "Sign-in failed",
+    "ssoFailed": "SSO sign-in failed",
+    "backToCatalog": "Back to public catalog",
+    "roles": {
+      "publisher": {
+        "label": "Data Publisher",
+        "description": "Upload datasets and submit for review"
+      },
+      "steward": {
+        "label": "Data Steward",
+        "description": "Review and approve publications"
+      },
+      "admin": {
+        "label": "Org Admin",
+        "description": "IT admin console and connectors"
+      },
+      "developer": {
+        "label": "Developer",
+        "description": "API keys and OpenAPI explorer"
+      }
+    }
+  },
+  "notifications": {
+    "title": "Notification centre",
+    "markAllRead": "Mark all read",
+    "markRead": "Mark read",
+    "loading": "Loading…",
+    "empty": "No notifications yet.",
+    "signInRequired": "Sign in to view notifications.",
+    "loadFailed": "Load failed",
+    "viewDetails": "View details"
+  },
+  "steward": {
+    "shellTitle": "Data Steward",
+    "title": "Steward review queue",
+    "subtitle": "Side-by-side dataset preview, quality signals, and SLA timers for each submission.",
+    "navReview": "Review queue",
+    "navApproval": "Senior approval",
+    "accessRequired": "Steward access required. Sign in as a data steward.",
+    "pendingReview": "Pending review",
+    "pendingApproval": "Pending approval",
+    "changesRequested": "Changes requested",
+    "slaBreached": "SLA breached",
+    "published30d": "Published (30d)",
+    "empty": "No submissions awaiting review.",
+    "export": {
+      "button": "Export governance CSV",
+      "exporting": "Exporting…",
+      "rangeLabel": "Report window",
+      "rangeDays": "Last {{days}} days",
+      "buttonPdf": "Export PDF"
+    },
+    "queueExport": {
+      "button": "Export review queue CSV",
+      "exporting": "Exporting queue…"
+    },
+    "approval": {
+      "title": "Senior approval queue",
+      "description": "Two-gate workflow: datasets steward-approved and awaiting senior publication.",
+      "accessRequired": "Org admin access required for senior approval.",
+      "empty": "No submissions awaiting senior approval.",
+      "pendingBadge": "Pending senior approval",
+      "viewDataset": "View dataset",
+      "stewardNotes": "Steward notes: {{notes}}",
+      "submission": "Submission {{id}}…"
+    },
+    "card": {
+      "submission": "Submission {{id}}…",
+      "publisherNotes": "Publisher notes:",
+      "failedLoad": "Failed to load dataset",
+      "quality": "Quality {{score}}",
+      "rows": "{{count}} rows",
+      "noDescription": "No description.",
+      "openDataset": "Open full dataset page",
+      "loading": "Loading preview…",
+      "sla": {
+        "none": "No SLA",
+        "breached": "SLA breached {{hours}}h ago",
+        "minutes": "{{minutes}}m until SLA",
+        "hours": "{{hours}}h until SLA"
+      }
+    },
+    "drawer": {
+      "open": "Open details",
+      "close": "Close panel",
+      "title": "Submission details",
+      "status": "Status",
+      "submittedAt": "Submitted",
+      "reviewDue": "Review due",
+      "slaBreached": "SLA breached",
+      "yes": "Yes",
+      "no": "No"
+    }
+  },
+  "publisher": {
+    "shellTitle": "Publisher",
+    "dashboard": {
+      "title": "Publisher dashboard",
+      "description": "Your datasets, workflow status, and quick actions.",
+      "publishNew": "Publish new dataset",
+      "loading": "Loading your datasets…",
+      "loadFailed": "Failed to load datasets",
+      "empty": "No datasets yet",
+      "emptyDescription": "Create a draft and upload a file to start the publication workflow.",
+      "yourDatasets": "Your datasets",
+      "views": "Views",
+      "aiQueries": "AI queries"
+    },
+    "timeline": {
+      "title": "Workflow activity",
+      "description": "Recent governance events across your datasets.",
+      "loading": "Loading workflow history…",
+      "loadFailed": "Failed to load workflow history",
+      "empty": "No workflow events yet.",
+      "viewDataset": "View dataset"
+    },
+    "staleness": {
+      "title": "{{count}} dataset(s) need attention",
+      "description": "Some datasets may be outdated or awaiting refresh.",
+      "descriptionStale": "{{stale}} dataset(s) are marked stale — review and refresh soon.",
+      "more": "+{{count}} more"
+    },
+    "feedback": {
+      "title": "Citizen feedback",
+      "loading": "Loading feedback…",
+      "empty": "No feedback on your published datasets yet.",
+      "stars": "{{count}}★"
+    }
+  },
+  "admin": {
+    "shellTitle": "IT Admin",
+    "nav": {
+      "overview": "Overview",
+      "branding": "Branding",
+      "health": "Health",
+      "connectors": "Connectors",
+      "jobs": "Jobs",
+      "security": "Security"
+    },
+    "overview": {
+      "title": "IT Admin overview",
+      "description": "Infrastructure health, connectors, and deployment metadata.",
+      "tenantUsage": "Tenant usage",
+      "users": "Users",
+      "datasets": "Datasets",
+      "published": "{{published}}/{{total}} published",
+      "apiCalls": "API calls",
+      "downloads": "Downloads",
+      "deployment": "Deployment",
+      "version": "Version",
+      "backup": "Backup",
+      "verified": "verified {{date}}",
+      "securityEvents": "Security events (7d)",
+      "connectors": "Connectors",
+      "noConnectors": "No connectors configured.",
+      "viewMatrix": "View connector matrix"
+    },
+    "connectors": {
+      "title": "Connector matrix",
+      "description": "Inbound data sources, sync health, and circuit breaker state.",
+      "total": "Total connectors",
+      "active": "Active",
+      "paused": "Paused",
+      "errored": "Error state",
+      "circuitOpen": "Circuit open",
+      "empty": "No connectors configured yet.",
+      "name": "Name",
+      "type": "Type",
+      "status": "Status",
+      "circuit": "Circuit",
+      "lastSync": "Last sync",
+      "neverSynced": "Never",
+      "actions": "Actions",
+      "test": "Test connection",
+      "triggerSync": "Trigger sync",
+      "testOk": "Connection OK",
+      "testFailed": "Connection failed",
+      "syncQueued": "Sync queued (job {{jobId}})",
+      "syncFailed": "Sync failed"
+    },
+    "health": {
+      "title": "Deep health",
+      "description": "Admin-only system checks across database, cache, and object storage.",
+      "overallStatus": "Overall status",
+      "checksPassing": "Checks passing",
+      "deployment": "Deployment mode",
+      "version": "Version",
+      "aiMode": "AI mode",
+      "failingCount": "{{count}} check(s) need attention.",
+      "empty": "No health data available."
+    },
+    "jobs": {
+      "title": "Celery job queues",
+      "description": "Worker queue layout and live Flower monitor for background tasks.",
+      "queueCount": "Configured queues",
+      "monitor": "Live monitor",
+      "workerQueues": "Worker queues",
+      "priorityTiers": "6 priority tiers",
+      "flowerTitle": "Celery Flower monitor",
+      "queueCritical": "Urgent ops",
+      "queueIngest": "File ingest",
+      "queueRefresh": "Connector sync",
+      "queueAi": "AI / embeddings",
+      "queueNotifications": "Alerts",
+      "queueMaintenance": "Rollups / DR",
+      "totalDepth": "Total queue depth",
+      "workerCount": "Active workers",
+      "dataSource": "Metrics source",
+      "placeholder": "Placeholder",
+      "empty": "No queue metrics available.",
+      "depthTrend": "{{queue}} depth trend"
+    },
+    "branding": {
+      "title": "White-label branding",
+      "displayName": "Display name",
+      "primaryColor": "Primary colour",
+      "primaryHover": "Primary hover",
+      "accentColor": "Accent colour",
+      "logoUrl": "Logo URL (https)",
+      "preview": "Live preview",
+      "previewHint": "Colours apply to the public portal after save.",
+      "sampleButton": "Sample button",
+      "save": "Save branding",
+      "saving": "Saving…",
+      "saved": "Branding saved.",
+      "loading": "Loading branding…",
+      "loadFailed": "Could not load branding",
+      "saveFailed": "Could not save branding"
+    }
+  },
+  "developer": {
+    "shellTitle": "Developer",
+    "nav": {
+      "overview": "Overview",
+      "apiKeys": "API keys",
+      "webhooks": "Webhooks",
+      "openapi": "OpenAPI",
+      "sdk": "SDK",
+      "rateLimits": "Rate limits"
+    },
+    "overview": {
+      "title": "Developer console",
+      "description": "Manage API keys, webhooks, and integration tooling for this tenant.",
+      "apiKeyCount": "API keys: {{count}}",
+      "quickStart": "Quick start (Python)"
+    },
+    "apiKeys": {
+      "title": "API keys",
+      "description": "Create and revoke scoped keys for programmatic access to the OpenCivic API."
+    },
+    "rateLimits": {
+      "title": "Rate limits",
+      "description": "Per-key utilization against your tenant plan limits.",
+      "tenantLimit": "Tenant limit (req/min)",
+      "activeKeys": "Active API keys",
+      "totalUsed": "Requests last minute",
+      "peakUtilization": "Peak utilization",
+      "perMin": "req/min",
+      "remaining": "{{count}} remaining · {{pct}}% utilized",
+      "empty": "No API keys yet",
+      "emptyDescription": "Create an API key to see per-minute utilization gauges."
+    },
+    "explorer": {
+      "title": "OpenAPI explorer",
+      "descriptionGlobal": "Interactive platform API documentation (Swagger UI).",
+      "titleDataset": "Dataset API explorer",
+      "descriptionDataset": "Auto-generated OpenAPI 3.1 spec for a published dataset.",
+      "viewDataset": "View dataset page",
+      "loading": "Loading OpenAPI spec…",
+      "empty": "No OpenAPI spec available.",
+      "specVersion": "OpenAPI version",
+      "apiVersion": "API version",
+      "pathCount": "Paths",
+      "iframeTitle": "Platform OpenAPI docs",
+      "tabOpenApi": "OpenAPI spec",
+      "tabOData": "OData"
+    }
+  },
+  "search": {
+    "paletteLabel": "Command palette",
+    "palettePlaceholder": "Search datasets…",
+    "paletteHint": "Ctrl+K · Esc to close",
+    "searching": "Searching…",
+    "noResults": "No results",
+    "related": "Related",
+    "exactMatch": "Match"
+  },
+  "chat": {
+    "title": "Chat with dataset",
+    "description": "Ask questions about the data. Answers cite the underlying query when available.",
+    "placeholder": "e.g. How many rows? What columns are available?",
+    "ask": "Ask",
+    "thinking": "Thinking…",
+    "failed": "Chat failed",
+    "aiBadge": "AI",
+    "confidence": "Confidence {{percent}}%",
+    "lowConfidence": "Low confidence — verify against source data.",
+    "citationColumns": "Columns cited"
+  },
+  "feedback": {
+    "title": "Rate this dataset",
+    "ratingLabel": "Rating",
+    "stars": "{{count}} stars",
+    "commentLabel": "Comment (optional)",
+    "commentPlaceholder": "How are you using this data?",
+    "submit": "Submit feedback",
+    "sending": "Sending…",
+    "submitFailed": "Submit failed",
+    "thankYou": "Thank you — your feedback was submitted."
+  }
+}

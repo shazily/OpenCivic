@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────
+   OpenCivic Design Tokens
+   Per-tenant colour overrides injected at runtime
+   via CSS custom properties on :root
+   ───────────────────────────────────────────── */
+
+:root {
+  /* Brand colours — overridden per tenant */
+  --color-primary: #1D4ED8;
+  --color-primary-hover: #1D40AF;
+  --color-primary-foreground: #FFFFFF;
+  --color-accent: #0EA5E9;
+
+  /* Neutral */
+  --color-background: #FFFFFF;
+  --color-background-secondary: #F8FAFC;
+  --color-foreground: #0F172A;
+  --color-foreground-secondary: #475569;
+  --color-foreground-muted: #94A3B8;
+  --color-border: #E2E8F0;
+  --color-border-secondary: #CBD5E1;
+
+  /* Semantic */
+  --color-success: #16A34A;
+  --color-warning: #D97706;
+  --color-danger: #DC2626;
+  --color-info: #0284C7;
+
+  /* Quality score colours */
+  --color-quality-high: #16A34A;
+  --color-quality-medium: #D97706;
+  --color-quality-low: #DC2626;
+
+  /* Staleness badge colours */
+  --color-fresh: #16A34A;
+  --color-possibly-outdated: #D97706;
+  --color-stale: #DC2626;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+
+  /* Spacing */
+  --radius: 0.5rem;
+  --radius-sm: 0.25rem;
+  --radius-lg: 0.75rem;
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --color-background: #0F172A;
+  --color-background-secondary: #1E293B;
+  --color-foreground: #F1F5F9;
+  --color-foreground-secondary: #94A3B8;
+  --color-border: #334155;
+  --color-border-secondary: #475569;
+}
+
+/* RTL support — applied when dir="rtl" on <html> */
+[dir="rtl"] {
+  text-align: right;
+}
+
+/* Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus visible — accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Skip to content — accessibility */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  padding: 0.5rem 1rem;
+  background: var(--color-primary);
+  color: var(--color-primary-foreground);
+  border-radius: var(--radius);
+  text-decoration: none;
+  z-index: 9999;
+}
+.skip-to-content:focus {
+  top: 1rem;
+}
+
+/* Staleness badges */
+.badge-fresh { background-color: #DCFCE7; color: #166534; }
+.badge-possibly-outdated { background-color: #FEF3C7; color: #92400E; }
+.badge-stale { background-color: #FEE2E2; color: #991B1B; }
+.badge-pending-refresh { background-color: #EDE9FE; color: #5B21B6; }
+
+/* AI watermark */
+.ai-assisted {
+  font-size: 0.75rem;
+  color: var(--color-foreground-muted);
+  border-left: 2px solid var(--color-accent);
+  padding-left: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+/* Code blocks */
+pre, code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+}

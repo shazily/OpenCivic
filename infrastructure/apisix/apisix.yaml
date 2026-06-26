@@ -1,0 +1,38 @@
+routes:
+  - id: opencivic-api
+    uri: /api/*
+    plugins:
+      cors:
+        allow_origins: "http://127.0.0.1:3100,http://localhost:3100,http://127.0.0.1:8088,http://localhost:8088,http://127.0.0.1:8080,http://localhost:8080"
+        allow_methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+        allow_headers: "Authorization,Content-Type,X-Api-Key,X-Tus-Hook-Secret,X-SCIM-Token"
+        expose_headers: "X-RateLimit-Limit,X-RateLimit-Remaining,X-RateLimit-Reset,Content-Length"
+        allow_credential: true
+        max_age: 3600
+      limit-count:
+        count: 120
+        time_window: 60
+        rejected_code: 429
+        key: remote_addr
+        policy: local
+      forward-auth:
+        uri: "http://api:8000/api/v1/internal/gateway-auth"
+        request_headers:
+          - Authorization
+          - X-Api-Key
+          - X-Forwarded-Uri
+          - X-Forwarded-Method
+        upstream_headers:
+          - X-OpenCivic-Gateway-Trust
+          - X-OpenCivic-User-Id
+          - X-OpenCivic-Tenant-Id
+          - X-OpenCivic-Roles
+          - X-OpenCivic-Auth-Type
+          - X-OpenCivic-Api-Key-Id
+        client_headers: []
+    upstream:
+      type: roundrobin
+      nodes:
+        "api:8000": 1
+
+#END

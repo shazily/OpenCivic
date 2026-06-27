@@ -14,6 +14,7 @@ API_PORT="${OPENCIVIC_API_PORT:-8100}"
 GATEWAY_PORT="${OPENCIVIC_GATEWAY_PORT:-8088}"
 FRONTEND_PORT="${OPENCIVIC_FRONTEND_PORT:-3100}"
 KEYCLOAK_PORT="${OPENCIVIC_KEYCLOAK_PORT:-8180}"
+KEYCLOAK_CONTAINER="${KEYCLOAK_CONTAINER:-opencivic-dev-keycloak}"
 
 compose_files() {
   local -a files=(-f docker-compose.dev.yml -f docker-compose.ci-release.yml)
@@ -35,8 +36,10 @@ log() {
 
 prepare_env() {
   cp .env.example .env
-  sed -i 's/CHANGE_ME/testpassword123/g' .env
   sed -i 's/CHANGE_ME_MINIMUM_32_CHARACTERS/testsecretkey32charsminimumhere1/g' .env
+  sed -i '/^KEYCLOAK_ADMIN_PASSWORD=/d' .env
+  sed -i '/^KEYCLOAK_ADMIN_SECRET=/d' .env
+  sed -i 's/CHANGE_ME/testpassword123/g' .env
   {
     echo "POSTGRES_PASSWORD=testpassword123"
     echo "VALKEY_PASSWORD=testpassword123"
@@ -55,12 +58,35 @@ prepare_env() {
   } >> .env
 }
 
+clean_frontend_host_artifacts() {
+  if [[ -e "$ROOT_DIR/frontend/node_modules" ]] || [[ -e "$ROOT_DIR/frontend/.next" ]]; then
+    log "Removing Docker-owned frontend artifacts for host Playwright install..."
+    sudo rm -rf "$ROOT_DIR/frontend/node_modules" "$ROOT_DIR/frontend/.next"
+  fi
+}
+
 wait_for_url() {
   local url="$1"
   local label="$2"
   local timeout="${3:-180}"
   log "Waiting for ${label} at ${url} (${timeout}s)..."
   timeout "${timeout}" bash -c "until curl -sf '${url}' >/dev/null; do sleep 3; done"
+}
+
+wait_for_container_healthy() {
+  local name="$1"
+  local timeout="${2:-360}"
+  log "Waiting for container ${name} healthy (${timeout}s)..."
+  if ! timeout "${timeout}" bash -c "
+    until [[ \"\$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}no-health{{end}}' '${name}' 2>/dev/null)\" == 'healthy' ]]; do
+      sleep 5
+    done
+  "; then
+    log "Container ${name} failed to become healthy:"
+    docker logs "${name}" --tail 100 >&2 || true
+    compose ps >&2 || true
+    exit 1
+  fi
 }
 
 bootstrap() {
@@ -74,7 +100,11 @@ bootstrap() {
   prepare_env
 
   log "Starting data services..."
-  compose up -d postgres valkey minio qdrant
+  if [[ "$OPENCIVIC_MODE" == "pilot" ]]; then
+    compose up -d postgres valkey minio qdrant keycloak
+  else
+    compose up -d postgres valkey minio qdrant
+  fi
 
   timeout 90 bash -c "until docker compose $(printf ' %q' "${files[@]}") exec -T postgres pg_isready -U opencivic -d opencivic; do sleep 2; done"
 
@@ -83,9 +113,8 @@ bootstrap() {
   compose run --rm --no-deps api python scripts/seed_dev.py
 
   if [[ "$OPENCIVIC_MODE" == "pilot" ]]; then
-    log "Starting Keycloak (pilot)..."
-    compose up -d keycloak
-    wait_for_url "http://127.0.0.1:${KEYCLOAK_PORT}/health/ready" "keycloak" 240
+    wait_for_container_healthy "${KEYCLOAK_CONTAINER}" 420
+    wait_for_url "http://127.0.0.1:${KEYCLOAK_PORT}/health/ready" "keycloak-http" 60
   fi
 
   log "Starting application stack..."
@@ -95,6 +124,8 @@ bootstrap() {
   wait_for_url "http://127.0.0.1:${API_PORT}/api/v1/health/ready" "api-ready" 240
   wait_for_url "http://127.0.0.1:${GATEWAY_PORT}/api/v1/health/live" "gateway" 240
   wait_for_url "http://127.0.0.1:${FRONTEND_PORT}/portal" "frontend" 240
+
+  clean_frontend_host_artifacts
 
   log "Bootstrap complete (mode=${OPENCIVIC_MODE})"
 }
@@ -121,6 +152,8 @@ playwright_smoke() {
   local mode="${1:-dev}"
   OPENCIVIC_MODE="$mode"
   export OPENCIVIC_MODE
+
+  clean_frontend_host_artifacts
 
   log "Running Playwright (mode=${mode})..."
   (

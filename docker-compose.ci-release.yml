@@ -1,11 +1,11 @@
-# CI overlay — release smoke without waiting for ClamAV (virus scans disabled).
+# CI overlay — release smoke without ClamAV wait; isolated frontend node_modules.
 services:
   api:
     environment:
       CLAMAV_ENABLED: "false"
 
   worker:
-    depends_on:
+    depends_on: !reset
       postgres:
         condition: service_healthy
       valkey:
@@ -18,3 +18,27 @@ services:
   beat:
     environment:
       CLAMAV_ENABLED: "false"
+
+  clamav:
+    profiles: [ci-clamav]
+
+  keycloak:
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HEALTH_ENABLED: "true"
+    healthcheck:
+      start_period: 120s
+      interval: 10s
+      timeout: 10s
+      retries: 36
+
+  frontend:
+    volumes: !reset
+      - ./frontend:/app
+      - opencivic_ci_frontend_modules:/app/node_modules
+      - opencivic_ci_frontend_next:/app/.next
+
+volumes:
+  opencivic_ci_frontend_modules:
+  opencivic_ci_frontend_next:

@@ -247,7 +247,7 @@ jobs:
   release-smoke:
     name: Release verify and Playwright (dev)
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -279,6 +279,7 @@ jobs:
       - name: Install frontend and Playwright
         working-directory: frontend
         run: |
+          sudo rm -rf node_modules .next
           npm ci
           npm run test:e2e:install
 
@@ -288,7 +289,7 @@ jobs:
   pilot-auth:
     name: Keycloak pilot auth E2E
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
 
@@ -335,6 +336,7 @@ jobs:
       - name: Install frontend and Playwright
         working-directory: frontend
         run: |
+          sudo rm -rf node_modules .next
           npm ci
           npm run test:e2e:install
 

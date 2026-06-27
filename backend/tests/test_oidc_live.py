@@ -29,6 +29,7 @@ def test_oidc_login_url_shape() -> None:
         code_challenge="test-challenge",
     )
     assert settings.KEYCLOAK_REALM in url
+    assert settings.keycloak_public_url.rstrip("/") in url
     assert "client_id=" in url
     assert "code_challenge=" in url
 

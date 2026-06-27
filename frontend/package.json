@@ -8,7 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:install": "playwright install chromium --with-deps",
+    "test:e2e:ci": "playwright test e2e/smoke.spec.ts e2e/oidc-callback.spec.ts",
+    "test:e2e:pilot": "playwright test e2e/pilot-auth.spec.ts"
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.0",

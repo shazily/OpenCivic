@@ -30,6 +30,7 @@ class Settings(BaseSettings):
     MINIO_SECRET_KEY: str = ""
     MINIO_BUCKET: str = "opencivic"
     KEYCLOAK_URL: str = "http://keycloak:8080"
+    KEYCLOAK_PUBLIC_URL: str = ""
     KEYCLOAK_REALM: str = "dev"
     KEYCLOAK_CLIENT_ID: str = "opencivic-portal"
     KEYCLOAK_ENABLED: bool = False
@@ -129,6 +130,11 @@ class Settings(BaseSettings):
     @property
     def ai_enabled(self):
         return self.AI_MODE != "disabled"
+
+    @property
+    def keycloak_public_url(self) -> str:
+        """Browser-reachable Keycloak base URL (defaults to KEYCLOAK_URL)."""
+        return self.KEYCLOAK_PUBLIC_URL or self.KEYCLOAK_URL
 
     @property
     def allowed_upload_extensions(self) -> list[str]:

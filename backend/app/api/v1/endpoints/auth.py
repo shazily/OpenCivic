@@ -109,7 +109,7 @@ async def auth_config() -> dict[str, object]:
         "data": {
             "dev_auth_enabled": settings.DEV_AUTH_ENABLED,
             "keycloak_enabled": settings.KEYCLOAK_ENABLED,
-            "keycloak_url": settings.KEYCLOAK_URL if settings.KEYCLOAK_ENABLED else None,
+            "keycloak_url": settings.keycloak_public_url if settings.KEYCLOAK_ENABLED else None,
             "keycloak_realm": settings.KEYCLOAK_REALM if settings.KEYCLOAK_ENABLED else None,
             "keycloak_client_id": (
                 settings.KEYCLOAK_CLIENT_ID if settings.KEYCLOAK_ENABLED else None

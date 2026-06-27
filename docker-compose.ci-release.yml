@@ -1,0 +1,20 @@
+# CI overlay — release smoke without waiting for ClamAV (virus scans disabled).
+services:
+  api:
+    environment:
+      CLAMAV_ENABLED: "false"
+
+  worker:
+    depends_on:
+      postgres:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    environment:
+      CLAMAV_ENABLED: "false"
+
+  beat:
+    environment:
+      CLAMAV_ENABLED: "false"

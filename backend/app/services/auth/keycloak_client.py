@@ -18,7 +18,10 @@ class KeycloakTokenClient:
     """Exchange and refresh tokens with Keycloak OpenID Connect."""
 
     def realm_base(self) -> str:
-        return f"{settings.KEYCLOAK_URL}/realms/{settings.KEYCLOAK_REALM}"
+        return f"{settings.KEYCLOAK_URL.rstrip('/')}/realms/{settings.KEYCLOAK_REALM}"
+
+    def public_realm_base(self) -> str:
+        return f"{settings.keycloak_public_url.rstrip('/')}/realms/{settings.KEYCLOAK_REALM}"
 
     def token_url(self) -> str:
         return f"{self.realm_base()}/protocol/openid-connect/token"
@@ -37,7 +40,7 @@ class KeycloakTokenClient:
             "code_challenge": code_challenge,
             "code_challenge_method": "S256",
         }
-        return f"{self.realm_base()}/protocol/openid-connect/auth?{urlencode(params)}"
+        return f"{self.public_realm_base()}/protocol/openid-connect/auth?{urlencode(params)}"
 
     async def exchange_authorization_code(
         self,

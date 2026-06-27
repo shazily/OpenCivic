@@ -4,6 +4,7 @@
 
 x-pilot-api-environment: &pilot-api-environment
   KEYCLOAK_ENABLED: "true"
+  KEYCLOAK_PUBLIC_URL: http://127.0.0.1:${OPENCIVIC_KEYCLOAK_PORT:-8180}
   DEV_AUTH_ENABLED: "false"
   TUS_ENABLED: "true"
   KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET:-pilot-client-secret-change-me}

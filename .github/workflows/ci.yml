@@ -244,6 +244,105 @@ jobs:
             backend/bandit-report.json
             backend/pip-audit-report.json
 
+  release-smoke:
+    name: Release verify and Playwright (dev)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bootstrap dev stack
+        run: chmod +x scripts/ci_release_smoke.sh && ./scripts/ci_release_smoke.sh bootstrap dev
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pip install -r requirements.txt
+
+      - name: verify_release smoke
+        env:
+          OPENCIVIC_MODE: dev
+        run: ./scripts/ci_release_smoke.sh verify-release
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend and Playwright
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run test:e2e:install
+
+      - name: Playwright dev smoke
+        run: ./scripts/ci_release_smoke.sh playwright dev
+
+  pilot-auth:
+    name: Keycloak pilot auth E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bootstrap pilot stack
+        run: chmod +x scripts/ci_release_smoke.sh && ./scripts/ci_release_smoke.sh bootstrap pilot
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pip install -r requirements-dev.txt
+
+      - name: Pilot OIDC pytest
+        working-directory: backend
+        env:
+          KEYCLOAK_ENABLED: "true"
+          KEYCLOAK_URL: http://127.0.0.1:8180
+          KEYCLOAK_PUBLIC_URL: http://127.0.0.1:8180
+          KEYCLOAK_REALM: dev
+          KEYCLOAK_CLIENT_ID: opencivic-portal
+          KEYCLOAK_CLIENT_SECRET: pilot-client-secret-change-me
+          POSTGRES_PASSWORD: testpassword123
+          DATABASE_MIGRATION_URL: postgresql+asyncpg://opencivic:testpassword123@127.0.0.1:5432/opencivic
+          DATABASE_URL: postgresql+asyncpg://opencivic_app:testpassword123@127.0.0.1:5432/opencivic
+          DATABASE_WRITE_URL: postgresql+asyncpg://opencivic_app:testpassword123@127.0.0.1:5432/opencivic
+          DATABASE_READ_URL: postgresql+asyncpg://opencivic_app:testpassword123@127.0.0.1:5432/opencivic
+          VALKEY_URL: redis://:testpassword123@127.0.0.1:6379/0
+          SECRET_KEY: testsecretkey32charsminimumhere1
+          AI_MODE: disabled
+          DEPLOYMENT_MODE: selfhosted
+        run: pytest tests/test_oidc_live.py -m pilot -v --tb=short
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend and Playwright
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run test:e2e:install
+
+      - name: Playwright pilot auth
+        env:
+          OPENCIVIC_MODE: pilot
+        run: ./scripts/ci_release_smoke.sh playwright pilot
+
   docker:
     name: Build and scan Docker image
     runs-on: ubuntu-latest

@@ -260,9 +260,16 @@ run_e2e_smoke() {
       npm install --no-audit --no-fund
       npx playwright install chromium --with-deps 2>/dev/null || npx playwright install chromium
     fi
-    OPENCIVIC_FRONTEND_URL="$frontend_base" \
-    OPENCIVIC_API_URL="${gateway_base}/api/v1" \
-      npm run test:e2e
+    if [[ "$PILOT" == "true" ]]; then
+      OPENCIVIC_FRONTEND_URL="$frontend_base" \
+      OPENCIVIC_API_URL="${gateway_base}/api/v1" \
+      OPENCIVIC_PILOT_AUTH=true \
+        npm run test:e2e:pilot
+    else
+      OPENCIVIC_FRONTEND_URL="$frontend_base" \
+      OPENCIVIC_API_URL="${gateway_base}/api/v1" \
+        npm run test:e2e:ci
+    fi
   )
 }
 

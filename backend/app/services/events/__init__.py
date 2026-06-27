@@ -1,0 +1,1 @@
+"""CQRS event publishing."""

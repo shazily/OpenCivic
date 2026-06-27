@@ -1,0 +1,4 @@
+# OpenCivic — AI worker dependencies (Celery ai queue; not in API image)
+-r requirements.txt
+
+sentence-transformers==3.3.1

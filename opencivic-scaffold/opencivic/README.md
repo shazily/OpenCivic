@@ -2,25 +2,17 @@
 
 Enterprise-grade, open-source, AI-native open data portal for governments, central banks, and regulators.
 
-## Quick start (local dev)
+## Quick start
 
 ```bash
 cp .env.example .env
 # Edit .env — replace all CHANGE_ME values
-./deploy.sh up    # starts backend (Docker) + frontend — one command
-./deploy.sh down  # stops everything
+./deploy.sh up
 ```
 
-Frontend: http://localhost:3100  
-Gateway (recommended): http://localhost:8088 — API via nginx → APISIX  
-API direct: http://localhost:8100/api/v1/health/live  
-API docs: http://localhost:8100/api/v1/docs  
-
-On Windows, the frontend runs on the host (Docker `npm install` is unreliable there). On Linux/macOS, Docker frontend is tried first with automatic fallback to the host.
-
-Ports are set in `.env` (`OPENCIVIC_GATEWAY_PORT`, `OPENCIVIC_API_PORT`, `OPENCIVIC_FRONTEND_PORT`). Default gateway is **8088** because **8080** is often taken by other Docker stacks.
-
-Full production stack (20+ services): `./deploy.sh prod up` — use only when you need Keycloak, Celery, observability, etc.
+Platform available at http://localhost  
+API docs at http://localhost/api/v1/docs  
+Admin at http://localhost/admin
 
 ## Documentation
 

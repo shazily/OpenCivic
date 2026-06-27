@@ -1,0 +1,39 @@
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "C4"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"app/db/migrations/env.py" = ["E402"]
+"app/db/migrations/versions/*.py" = ["E501"]
+"app/services/connectors/*.py" = ["S608"]
+"app/services/ai/chat_service.py" = ["S608"]
+"app/workers/tasks/tasks.py" = ["S603"]
+"app/services/ai/metadata_service.py" = ["S110"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "--tb=short"
+timeout = 120
+timeout_method = "thread"
+markers = [
+    "live: tests requiring live external services (Minio, tusd, Ollama)",
+    "gateway: tests requiring nginx/APISIX gateway path",
+    "pilot: tests requiring pilot compose overlay",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests"]
+skips = ["B101"]

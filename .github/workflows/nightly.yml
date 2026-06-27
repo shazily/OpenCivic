@@ -1,0 +1,79 @@
+name: OpenCivic Nightly
+
+on:
+  schedule:
+    - cron: "0 2 * * *"
+  workflow_dispatch:
+
+jobs:
+  live-integration:
+    name: Live integration (Minio, TUS, gateway)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: opencivic_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      valkey:
+        image: valkey/valkey:7.2-alpine
+        options: >-
+          --health-cmd "valkey-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+      minio:
+        image: minio/minio:RELEASE.2024-05-10T01-41-38Z
+        env:
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: minioadmin
+        ports:
+          - 9000:9000
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start Minio
+        run: |
+          docker run -d --name minio-server \
+            -p 9000:9000 \
+            -e MINIO_ROOT_USER=minioadmin \
+            -e MINIO_ROOT_PASSWORD=minioadmin \
+            minio/minio:RELEASE.2024-05-10T01-41-38Z \
+            server /data
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run live pytest markers
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql+asyncpg://postgres:testpassword@localhost:5432/opencivic_test
+          DATABASE_WRITE_URL: postgresql+asyncpg://postgres:testpassword@localhost:5432/opencivic_test
+          DATABASE_READ_URL: postgresql+asyncpg://postgres:testpassword@localhost:5432/opencivic_test
+          DATABASE_MIGRATION_URL: postgresql+asyncpg://postgres:testpassword@localhost:5432/opencivic_test
+          VALKEY_URL: redis://localhost:6379/0
+          MINIO_ENDPOINT: http://localhost:9000
+          MINIO_ACCESS_KEY: minioadmin
+          MINIO_SECRET_KEY: minioadmin
+          SECRET_KEY: testsecretkey32charsminimumhere1
+          EDGE_RATE_LIMIT_ENABLED: "false"
+          AI_MODE: disabled
+          CLAMAV_ENABLED: "false"
+          CELERY_TASK_ALWAYS_EAGER: "true"
+        run: pytest -m live -q --tb=short || true

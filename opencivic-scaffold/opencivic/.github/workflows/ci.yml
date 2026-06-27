@@ -1,0 +1,135 @@
+name: OpenCivic CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    name: Test and security scan
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: opencivic_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      valkey:
+        image: valkey/valkey:7.2-alpine
+        options: >-
+          --health-cmd "valkey-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        working-directory: backend
+        run: pip install -r requirements.txt
+
+      - name: Lint (ruff)
+        working-directory: backend
+        run: ruff check app/ connectors/
+
+      - name: Type check (mypy)
+        working-directory: backend
+        run: mypy app/ --ignore-missing-imports
+        continue-on-error: true  # Warn but don't fail during scaffold phase
+
+      - name: Run tests
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql+asyncpg://postgres:testpassword@localhost:5432/opencivic_test
+          DATABASE_WRITE_URL: postgresql+asyncpg://postgres:testpassword@localhost:5432/opencivic_test
+          DATABASE_READ_URL: postgresql+asyncpg://postgres:testpassword@localhost:5432/opencivic_test
+          VALKEY_URL: valkey://:@localhost:6379/0
+          SECRET_KEY: testsecretkey32charsminimumhere1
+          QDRANT_URL: ""
+          MINIO_ACCESS_KEY: minioadmin
+          MINIO_SECRET_KEY: minioadmin
+          KEYCLOAK_URL: http://localhost:8080
+          KEYCLOAK_ADMIN_CLIENT_SECRET: test
+          LLM_PROVIDER: ollama
+          LLM_MODEL: llama3.2
+          AI_MODE: disabled
+          DEPLOYMENT_MODE: selfhosted
+        run: pytest tests/ -v --tb=short --cov=app --cov-report=xml
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          file: backend/coverage.xml
+        continue-on-error: true
+
+  security:
+    name: Security scanning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install security tools
+        run: pip install bandit pip-audit
+
+      - name: SAST scan (bandit)
+        working-directory: backend
+        run: bandit -r app/ connectors/ -f json -o bandit-report.json || true
+
+      - name: Dependency CVE scan (pip-audit)
+        working-directory: backend
+        run: pip-audit -r requirements.txt --format json -o pip-audit-report.json
+
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            backend/bandit-report.json
+            backend/pip-audit-report.json
+
+  docker:
+    name: Build and scan Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t opencivic-api:${{ github.sha }} ./backend
+
+      - name: Scan image (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: opencivic-api:${{ github.sha }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+        continue-on-error: true

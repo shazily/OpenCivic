@@ -1,0 +1,18 @@
+apisix:
+  node_listen: 9080
+  enable_ipv6: false
+  enable_admin: false
+  router:
+    http: radixtree_uri
+deployment:
+  role: data_plane
+  role_data_plane:
+    config_provider: yaml
+  admin:
+    admin_listen:
+      ip: 127.0.0.1
+      port: 9180
+plugins:
+  - cors
+  - proxy-rewrite
+  - forward-auth

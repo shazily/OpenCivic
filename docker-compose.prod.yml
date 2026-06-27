@@ -1,0 +1,410 @@
+name: opencivic
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+x-api-environment: &api-environment
+  DEPLOYMENT_MODE: ${DEPLOYMENT_MODE:-selfhosted}
+  SECRET_KEY: ${SECRET_KEY}
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  AI_MODE: ${AI_MODE:-disabled}
+  LLM_PROVIDER: ${LLM_PROVIDER:-ollama}
+  DATABASE_URL: postgresql+asyncpg://opencivic:${POSTGRES_PASSWORD}@pgbouncer:6432/opencivic
+  DATABASE_WRITE_URL: postgresql+asyncpg://opencivic:${POSTGRES_PASSWORD}@postgres-primary:5432/opencivic
+  DATABASE_READ_URL: postgresql+asyncpg://opencivic:${POSTGRES_PASSWORD}@postgres-replica:5432/opencivic
+  VALKEY_URL: valkey://:${VALKEY_PASSWORD}@valkey:6379/0
+  CELERY_BROKER_URL: valkey://:${VALKEY_PASSWORD}@valkey:6379/0
+  CELERY_RESULT_BACKEND: valkey://:${VALKEY_PASSWORD}@valkey:6379/1
+  QDRANT_URL: http://qdrant:6333
+  QDRANT_API_KEY: ${QDRANT_API_KEY}
+  MINIO_ENDPOINT: http://minio:9000
+  MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+  MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+  MINIO_BUCKET: opencivic
+  KEYCLOAK_URL: http://keycloak:8080
+  KEYCLOAK_ADMIN_CLIENT_ID: opencivic-admin
+  KEYCLOAK_ADMIN_CLIENT_SECRET: ${KEYCLOAK_ADMIN_SECRET}
+  CORS_ORIGINS: http://localhost,http://localhost:3000
+  OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4317
+
+services:
+  postgres-primary:
+    image: postgres:16-alpine
+    container_name: opencivic-postgres-primary
+    environment:
+      POSTGRES_USER: opencivic
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: opencivic
+      KEYCLOAK_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+    volumes:
+      - postgres_primary_data:/var/lib/postgresql/data
+      - ./infrastructure/docker/postgres/postgresql.conf:/etc/postgresql/postgresql.conf:ro
+      - ./infrastructure/docker/postgres/01-init.sh:/docker-entrypoint-initdb.d/01-init.sh:ro
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opencivic -d opencivic"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+    logging: *default-logging
+    networks: [opencivic]
+
+  postgres-replica:
+    image: postgres:16-alpine
+    container_name: opencivic-postgres-replica
+    environment:
+      POSTGRES_USER: opencivic
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: opencivic
+      POSTGRES_PRIMARY_HOST: postgres-primary
+      POSTGRES_REPLICATION_USER: replicator
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres_replica_data:/var/lib/postgresql/data
+      - ./infrastructure/docker/postgres/replica-entrypoint.sh:/replica-entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/replica-entrypoint.sh"]
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opencivic -d opencivic"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 60s
+    logging: *default-logging
+    networks: [opencivic]
+
+  pgbouncer:
+    image: edoburu/pgbouncer:1.22.1-p0
+    container_name: opencivic-pgbouncer
+    volumes:
+      - ./infrastructure/docker/pgbouncer/pgbouncer.ini:/etc/pgbouncer/pgbouncer.ini:ro
+      - ./infrastructure/docker/pgbouncer/userlist.txt:/etc/pgbouncer/userlist.txt:ro
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 6432"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+    networks: [opencivic]
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    container_name: opencivic-valkey
+    command: valkey-server --requirepass ${VALKEY_PASSWORD}
+    healthcheck:
+      test: ["CMD", "valkey-cli", "-a", "${VALKEY_PASSWORD}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+    networks: [opencivic]
+
+  qdrant:
+    image: qdrant/qdrant:v1.9.2
+    container_name: opencivic-qdrant
+    environment:
+      QDRANT__SERVICE__API_KEY: ${QDRANT_API_KEY}
+    volumes:
+      - qdrant_data:/qdrant/storage
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:6333/healthz || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+    networks: [opencivic]
+
+  minio:
+    image: minio/minio:RELEASE.2024-05-10T01-41-38Z
+    container_name: opencivic-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+    networks: [opencivic]
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.4
+    container_name: opencivic-keycloak
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres-primary:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_HEALTH_ENABLED: "true"
+    depends_on:
+      postgres-primary:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 90s
+    logging: *default-logging
+    networks: [opencivic]
+
+  apisix:
+    image: apache/apisix:3.9.1-debian
+    container_name: opencivic-apisix
+    volumes:
+      - ./infrastructure/apisix/config.yaml:/usr/local/apisix/conf/config.yaml:ro
+      - ./infrastructure/apisix/apisix.yaml:/usr/local/apisix/conf/apisix.yaml:ro
+    environment:
+      APISIX_STAND_ALONE: "true"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "bash -c 'exec 3<>/dev/tcp/127.0.0.1/9080 && printf \"GET /api/v1/health/live HTTP/1.1\\r\\nHost: localhost\\r\\n\\r\\n\" >&3 && head -1 <&3 | grep -q 200'",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+    networks: [opencivic]
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: opencivic-api
+    environment:
+      <<: *api-environment
+    depends_on:
+      pgbouncer:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+      postgres-replica:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    logging: *default-logging
+    networks: [opencivic]
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: opencivic-worker
+    command: celery -A app.workers.celery_app.celery_app worker --loglevel=INFO -Q critical,ingest,refresh,ai,notifications,maintenance
+    environment:
+      <<: *api-environment
+    depends_on:
+      api:
+        condition: service_healthy
+      valkey:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A app.workers.celery_app.celery_app inspect ping -d celery@$$HOSTNAME | grep -q OK"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+    logging: *default-logging
+    networks: [opencivic]
+
+  beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: opencivic-beat
+    command: celery -A app.workers.celery_app.celery_app beat --loglevel=INFO
+    environment:
+      <<: *api-environment
+    depends_on:
+      worker:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /proc/1/cmdline"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    logging: *default-logging
+    networks: [opencivic]
+
+  flower:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: opencivic-flower
+    command: celery -A app.workers.celery_app.celery_app flower --port=5555 --basic_auth=${FLOWER_USER}:${FLOWER_PASSWORD}
+    environment:
+      <<: *api-environment
+    ports:
+      - "5555:5555"
+    depends_on:
+      worker:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5555/healthcheck || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    logging: *default-logging
+    networks: [opencivic]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: opencivic-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost/api/v1
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    logging: *default-logging
+    networks: [opencivic]
+
+  clamav:
+    image: clamav/clamav:latest
+    container_name: opencivic-clamav
+    healthcheck:
+      test: ["CMD-SHELL", "clamdscan --version || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+    logging: *default-logging
+    networks: [opencivic]
+
+  loki:
+    image: grafana/loki:3.0.0
+    container_name: opencivic-loki
+    command: -config.file=/etc/loki/config.yaml
+    volumes:
+      - ./infrastructure/docker/loki/config.yaml:/etc/loki/config.yaml:ro
+      - loki_data:/loki
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3100/ready || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+    networks: [opencivic]
+
+  tempo:
+    image: grafana/tempo:2.4.1
+    container_name: opencivic-tempo
+    command: -config.file=/etc/tempo/config.yaml
+    volumes:
+      - ./infrastructure/docker/tempo/config.yaml:/etc/tempo/config.yaml:ro
+      - tempo_data:/tmp/tempo
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3200/ready || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+    networks: [opencivic]
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.101.0
+    container_name: opencivic-otel-collector
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./infrastructure/docker/otel/otel-collector-config.yaml:/etc/otel-collector-config.yaml:ro
+    depends_on:
+      tempo:
+        condition: service_healthy
+      loki:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "/otelcol-contrib", "validate", "--config=/etc/otel-collector-config.yaml"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    logging: *default-logging
+    networks: [opencivic]
+
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: opencivic-grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+    volumes:
+      - ./infrastructure/docker/grafana/provisioning:/etc/grafana/provisioning:ro
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      loki:
+        condition: service_healthy
+      tempo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+    networks: [opencivic]
+
+  nginx:
+    image: nginx:1.26-alpine
+    container_name: opencivic-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
+    depends_on:
+      frontend:
+        condition: service_healthy
+      apisix:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    logging: *default-logging
+    networks: [opencivic]
+
+networks:
+  opencivic:
+    driver: bridge
+
+volumes:
+  postgres_primary_data:
+  postgres_replica_data:
+  qdrant_data:
+  minio_data:
+  loki_data:
+  tempo_data:
+  grafana_data:

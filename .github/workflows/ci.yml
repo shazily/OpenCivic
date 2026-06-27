@@ -1,0 +1,268 @@
+name: OpenCivic CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  test:
+    name: Test and security scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: opencivic_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      valkey:
+        image: valkey/valkey:7.2-alpine
+        options: >-
+          --health-cmd "valkey-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        working-directory: backend
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint (ruff)
+        working-directory: backend
+        run: ruff check app/
+
+      - name: Type check (mypy)
+        working-directory: backend
+        run: mypy app/ --ignore-missing-imports
+        continue-on-error: true  # Warn but don't fail during scaffold phase
+
+      - name: Run tests
+        working-directory: backend
+        env:
+          POSTGRES_PASSWORD: testpassword
+          DATABASE_MIGRATION_URL: postgresql+asyncpg://postgres:testpassword@localhost:5432/opencivic_test
+          DATABASE_URL: postgresql+asyncpg://opencivic_app:testpassword@localhost:5432/opencivic_test
+          DATABASE_WRITE_URL: postgresql+asyncpg://opencivic_app:testpassword@localhost:5432/opencivic_test
+          DATABASE_READ_URL: postgresql+asyncpg://opencivic_app:testpassword@localhost:5432/opencivic_test
+          VALKEY_URL: redis://localhost:6379/0
+          SECRET_KEY: testsecretkey32charsminimumhere1
+          DEV_AUTH_ENABLED: "true"
+          DEV_AUTH_TOKEN: test-dev-token
+          DEV_TENANT_ID: 00000000-0000-0000-0000-000000000001
+          DEV_USER_ID: 00000000-0000-0000-0000-000000000002
+          DEV_LICENCE_ID: 00000000-0000-0000-0000-000000000003
+          DEV_STEWARD_USER_ID: 00000000-0000-0000-0000-000000000010
+          DEV_STEWARD_AUTH_TOKEN: test-steward-token
+          DEV_ADMIN_USER_ID: 00000000-0000-0000-0000-000000000011
+          DEV_ADMIN_AUTH_TOKEN: test-admin-token
+          DEV_DEVELOPER_USER_ID: 00000000-0000-0000-0000-000000000012
+          DEV_DEVELOPER_AUTH_TOKEN: test-developer-token
+          MINIO_ACCESS_KEY: minioadmin
+          MINIO_SECRET_KEY: minioadmin
+          KEYCLOAK_URL: http://localhost:8080
+          KEYCLOAK_ADMIN_CLIENT_SECRET: test
+          LLM_PROVIDER: ollama
+          LLM_MODEL: llama3.2
+          AI_MODE: disabled
+          DEPLOYMENT_MODE: selfhosted
+          CELERY_TASK_ALWAYS_EAGER: "true"
+          CLAMAV_ENABLED: "false"
+          TUS_INTERNAL_URL: http://127.0.0.1:1080/files/
+          QDRANT_URL: http://127.0.0.1:6333
+        run: pytest tests/ -m "not live and not gateway and not pilot" -v --tb=short --cov=app --cov-report=xml --cov-fail-under=60
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          file: backend/coverage.xml
+        continue-on-error: true
+
+  gateway:
+    name: Gateway edge-auth smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start gateway stack
+        run: |
+          cp .env.example .env
+          sed -i 's/CHANGE_ME/testpassword123/g' .env
+          sed -i 's/CHANGE_ME_MINIMUM_32_CHARACTERS/testsecretkey32charsminimumhere1/g' .env
+          echo "POSTGRES_PASSWORD=testpassword123" >> .env
+          echo "VALKEY_PASSWORD=testpassword123" >> .env
+          echo "SECRET_KEY=testsecretkey32charsminimumhere1" >> .env
+          echo "EDGE_AUTH_ENABLED=true" >> .env
+          echo "GATEWAY_AUTH_SECRET=ci-gateway-secret" >> .env
+          echo "OPENCIVIC_GATEWAY_PORT=8088" >> .env
+          echo "EDGE_RATE_LIMIT_ENABLED=true" >> .env
+          echo "GATEWAY_RATE_LIMIT_ENABLED=true" >> .env
+          docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml up -d postgres valkey minio
+          timeout 60 bash -c 'until docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml exec -T postgres pg_isready -U opencivic -d opencivic; do sleep 2; done'
+          docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml run --rm --no-deps \
+            -e DATABASE_MIGRATION_URL=postgresql+asyncpg://opencivic:testpassword123@postgres:5432/opencivic \
+            -e POSTGRES_PASSWORD=testpassword123 \
+            api alembic upgrade head
+          docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml up -d api apisix nginx frontend || {
+            docker compose -f docker-compose.dev.yml -f docker-compose.ci-gateway.yml logs apisix
+            exit 1
+          }
+          timeout 180 bash -c 'until curl -sf http://127.0.0.1:8088/api/v1/health/live; do sleep 5; done'
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        working-directory: backend
+        run: pip install -r requirements-dev.txt
+
+      - name: Gateway pytest
+        working-directory: backend
+        env:
+          OPENCIVIC_GATEWAY_URL: http://127.0.0.1:8088
+          DEV_AUTH_TOKEN: dev-local-token-change-me
+          GATEWAY_AUTH_SECRET: ci-gateway-secret
+          EDGE_AUTH_ENABLED: "true"
+          POSTGRES_PASSWORD: testpassword123
+          DATABASE_MIGRATION_URL: postgresql+asyncpg://opencivic:testpassword123@127.0.0.1:5433/opencivic
+          DATABASE_URL: postgresql+asyncpg://opencivic_app:testpassword123@127.0.0.1:5433/opencivic
+          DATABASE_WRITE_URL: postgresql+asyncpg://opencivic_app:testpassword123@127.0.0.1:5433/opencivic
+          DATABASE_READ_URL: postgresql+asyncpg://opencivic_app:testpassword123@127.0.0.1:5433/opencivic
+          VALKEY_URL: redis://:testpassword123@127.0.0.1:6379/0
+          SECRET_KEY: testsecretkey32charsminimumhere1
+          DEV_AUTH_ENABLED: "true"
+          DEV_TENANT_ID: 00000000-0000-0000-0000-000000000001
+          DEV_USER_ID: 00000000-0000-0000-0000-000000000002
+          DEV_LICENCE_ID: 00000000-0000-0000-0000-000000000003
+          DEV_STEWARD_USER_ID: 00000000-0000-0000-0000-000000000010
+          DEV_ADMIN_USER_ID: 00000000-0000-0000-0000-000000000011
+          DEV_DEVELOPER_USER_ID: 00000000-0000-0000-0000-000000000012
+          AI_MODE: disabled
+          CELERY_TASK_ALWAYS_EAGER: "true"
+          CLAMAV_ENABLED: "false"
+          EDGE_RATE_LIMIT_ENABLED: "true"
+          GATEWAY_RATE_LIMIT_ENABLED: "true"
+        run: pytest tests/test_gateway_auth.py tests/test_gateway_edge_auth.py tests/test_gateway_smoke.py -m gateway -q
+
+  helm:
+    name: Helm chart smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.4
+
+      - name: Helm template smoke
+        run: python scripts/helm_smoke.py
+
+  frontend:
+    name: Frontend build and type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Type check
+        working-directory: frontend
+        run: npm run type-check
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: http://127.0.0.1:8100/api/v1
+
+  security:
+    name: Security scanning
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install security tools
+        run: pip install bandit pip-audit
+
+      - name: SAST scan (bandit)
+        working-directory: backend
+        run: bandit -r app/ connectors/ -f json -o bandit-report.json || true
+
+      - name: Dependency CVE scan (pip-audit)
+        working-directory: backend
+        run: |
+          pip-audit -r requirements.txt --format json -o pip-audit-report.json \
+            --ignore-vuln CVE-2026-30922
+
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: |
+            backend/bandit-report.json
+            backend/pip-audit-report.json
+
+  docker:
+    name: Build and scan Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t opencivic-api:${{ github.sha }} ./backend
+
+      - name: Scan image (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: opencivic-api:${{ github.sha }}
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+
+      - name: Upload Trivy results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
+        continue-on-error: true

@@ -1,0 +1,61 @@
+{{- if .Values.worker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opencivic.fullname" . }}-worker
+  labels:
+    app.kubernetes.io/name: {{ include "opencivic.name" . }}
+    app.kubernetes.io/component: worker
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "opencivic.name" . }}
+      app.kubernetes.io/component: worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "opencivic.name" . }}
+        app.kubernetes.io/component: worker
+    spec:
+      containers:
+        - name: worker
+          image: "{{ .Values.image.api.repository }}:{{ .Values.image.api.tag }}"
+          imagePullPolicy: {{ .Values.image.api.pullPolicy }}
+          command: ["celery", "-A", "app.workers.celery_app.celery_app", "worker", "-l", "info", "-Q", "critical,ingest,refresh,ai,notifications,maintenance"]
+          env:
+            - name: DEPLOYMENT_MODE
+              value: {{ .Values.env.deploymentMode | quote }}
+            - name: DATABASE_URL
+              value: {{ include "opencivic.databaseUrl" . | quote }}
+            - name: VALKEY_URL
+              value: {{ include "opencivic.valkeyUrl" . | quote }}
+            - name: CELERY_BROKER_URL
+              value: {{ include "opencivic.valkeyUrl" . | quote }}
+            - name: CELERY_RESULT_BACKEND
+              value: {{ include "opencivic.valkeyUrl" . | quote }}
+            - name: STORAGE_PROVIDER
+              value: {{ .Values.env.storageProvider | quote }}
+            - name: STORAGE_ENDPOINT
+              value: {{ include "opencivic.storageEndpoint" . | quote }}
+            - name: MINIO_ENDPOINT
+              value: {{ include "opencivic.storageEndpoint" . | quote }}
+            - name: MINIO_BUCKET
+              value: {{ .Values.env.storageBucket | quote }}
+            {{- if .Values.minio.enabled }}
+            - name: MINIO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "opencivic.fullname" . }}-minio
+                  key: accessKey
+            - name: MINIO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "opencivic.fullname" . }}-minio
+                  key: secretKey
+            {{- end }}
+            - name: AI_MODE
+              value: {{ .Values.env.aiMode | quote }}
+            - name: QDRANT_URL
+              value: {{ include "opencivic.qdrantUrl" . | quote }}
+{{- end }}

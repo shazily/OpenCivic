@@ -1,0 +1,63 @@
+# OpenCivic — production Python dependencies
+# All licences: MIT, Apache 2.0, BSD, or PostgreSQL
+# Pin ALL versions — pip-audit runs in CI on every PR (this file only)
+
+# ── Web framework ──
+fastapi==0.138.1
+uvicorn[standard]==0.34.0
+python-multipart==0.0.32
+gunicorn==23.0.0
+pydantic==2.10.6
+pydantic-settings==2.7.1
+
+# ── Database ──
+sqlalchemy[asyncio]==2.0.30
+asyncpg==0.29.0
+alembic==1.13.1
+psycopg2-binary==2.9.9
+
+# ── Cache / Queue ──
+redis==5.0.4
+celery[redis]==5.4.0
+flower==2.0.1
+
+# ── Authentication ──
+python-jose[cryptography]==3.4.0
+passlib[bcrypt]==1.7.4
+httpx==0.28.1
+
+# ── AI / LLM ──
+openai==1.58.1
+anthropic==0.42.0
+qdrant-client==1.12.1
+
+# ── Object storage ──
+boto3==1.34.109
+azure-storage-blob==12.19.1
+google-cloud-storage==2.16.0
+
+# ── Data processing ──
+pandas==2.2.3
+pyarrow==23.0.1
+duckdb==1.1.3
+chardet==5.2.0
+openpyxl==3.1.5
+xlrd==1.2.0
+pdfplumber==0.11.10
+
+# ── Connectors ──
+oracledb==2.4.1
+PyHive==0.7.0
+thrift==0.20.0
+thrift-sasl==0.4.3
+aiomysql==0.3.0
+
+# ── Security ──
+cryptography==48.0.1
+
+# ── Observability ──
+structlog==24.2.0
+opentelemetry-api==1.24.0
+opentelemetry-sdk==1.24.0
+opentelemetry-instrumentation-fastapi==0.45b0
+opentelemetry-exporter-otlp-proto-grpc==1.24.0

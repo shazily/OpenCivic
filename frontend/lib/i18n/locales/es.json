@@ -1,0 +1,424 @@
+{
+  "nav": {
+    "catalog": "Catálogo",
+    "dashboard": "Panel",
+    "publish": "Publicar",
+    "notifications": "Notificaciones",
+    "signOut": "Cerrar sesión"
+  },
+  "public": {
+    "catalog": "Catálogo",
+    "staffSignIn": "Acceso del personal"
+  },
+  "catalog": {
+    "title": "Catálogo de datos abiertos",
+    "subtitle": "Explore los conjuntos de datos publicados en este portal. Solo aparecen los que completaron la revisión y publicación.",
+    "skipToContent": "Saltar al contenido",
+    "searchResults": "Resultados de búsqueda para \"{{query}}\"",
+    "tagFilter": " · etiqueta: {{tag}}",
+    "loadError": "No se pudo cargar el catálogo: {{message}}",
+    "noMatch": "Ningún conjunto de datos publicado coincide con su búsqueda.",
+    "empty": "Aún no hay conjuntos de datos publicados.",
+    "staffSignIn": "Acceso del personal",
+    "staffSignInHint": "para cargar y publicar datos.",
+    "featuredTitle": "Conjuntos destacados",
+    "featuredSubtitle": "Mayor puntuación de calidad entre datos publicados recientemente.",
+    "searchPlaceholder": "Buscar conjuntos de datos…",
+    "search": "Buscar",
+    "clear": "Borrar",
+    "semanticDegraded": "La búsqueda semántica no está disponible temporalmente — solo coincidencias por palabras clave."
+  },
+  "dataset": {
+    "backToCatalog": "← Volver al catálogo",
+    "noDescription": "Sin descripción.",
+    "quality": "Calidad {{score}}",
+    "rows": "Filas",
+    "views": "Vistas",
+    "downloads": "Descargas",
+    "rating": "Valoración",
+    "previewTitle": "Vista previa de datos",
+    "noDataYet": "Aún no hay datos importados.",
+    "previewLoading": "Cargando vista previa…",
+    "download": "Descargar",
+    "downloading": "Descargando…",
+    "downloadFormat": "Formato",
+    "downloadCsv": "CSV",
+    "downloadJson": "JSON",
+    "downloadParquet": "Parquet (URL firmada)",
+    "downloadPreparing": "Preparando archivo…",
+    "downloadOpening": "Abriendo descarga segura…",
+    "downloadEmpty": "No hay datos para descargar",
+    "downloadFailed": "Error al descargar ({{status}})",
+    "downloadFailedGeneric": "Error al descargar",
+    "engagementTrend": "Interacción 14 días (vistas + descargas)",
+    "embedTitle": "Insertar este conjunto",
+    "embedDescription": "Vista previa y copia de iframe o fragmento API para su sitio.",
+    "embedIframe": "Iframe responsive",
+    "embedApi": "API REST (curl)",
+    "embedCopy": "Copiar fragmento",
+    "embedCopied": "Copiado",
+    "apiExplorer": {
+      "title": "Explorador API",
+      "description": "Endpoint REST instantáneo y especificación OpenAPI auto-generada para este conjunto.",
+      "tabRest": "Fragmentos REST",
+      "tabOpenApi": "Especificación OpenAPI",
+      "dataEndpoint": "API de datos (curl)",
+      "powershell": "PowerShell",
+      "loading": "Cargando especificación OpenAPI…",
+      "pathCount": "{{count}} ruta(s) en la especificación",
+      "fetchSpec": "Copiar URL de la especificación",
+      "openDeveloperConsole": "Abrir en consola de desarrollador",
+      "tabOData": "OData",
+      "loadingOData": "Cargando servicio OData…",
+      "odataVersion": "Servicio OData {{version}}",
+      "odataServiceRoot": "Raíz del servicio",
+      "odataExample": "Ejemplo Excel / Power BI",
+      "odataPowerQuery": "Power Query M (Excel)",
+      "odataMetadata": "URL $metadata"
+    }
+  },
+  "home": {
+    "title": "Datos abiertos en los que confiar",
+    "subtitle": "Conjuntos de datos públicos con flujos de revisión, puntuación de calidad y API instantánea.",
+    "publishedDatasets": "Conjuntos publicados",
+    "instantApi": "API al publicar",
+    "instantApiValue": "Sí",
+    "openLicence": "Licencias abiertas",
+    "openLicenceValue": "Predeterminado",
+    "trustQuality": "Calidad puntuada",
+    "trustReviewed": "Revisado por humanos",
+    "trustMachineReadable": "APIs legibles por máquina",
+    "browseCatalog": "Explorar catálogo"
+  },
+  "publish": {
+    "title": "Publicar un conjunto de datos",
+    "description": "Cree un borrador y cargue un archivo CSV, TSV, JSON, JSONL, XLSX o Parquet. Envíe a revisión tras la ingesta.",
+    "tusHint": "Archivos grandes: habilite el perfil tus compose para cargas TUS reanudables en {{endpoint}}",
+    "titleLabel": "Título",
+    "slugLabel": "Identificador",
+    "descriptionLabel": "Descripción",
+    "fileLabel": "Archivo de datos (CSV, TSV, JSON, JSONL, XLSX, Parquet)",
+    "chooseFile": "Elija un archivo CSV, TSV, JSON, JSONL, XLSX o Parquet para cargar.",
+    "creating": "Creando borrador del conjunto de datos…",
+    "uploading": "Cargando archivo…",
+    "uploadingTus": "Cargando vía TUS… {{percent}}%",
+    "processing": "Procesando ingesta…",
+    "queued": "Carga en cola. Actualice la página del conjunto de datos en unos segundos.",
+    "submit": "Publicar conjunto de datos",
+    "submitting": "Publicando…",
+    "failed": "Error al publicar"
+  },
+  "language": {
+    "label": "Idioma",
+    "en": "Inglés",
+    "ar": "Árabe",
+    "fr": "Francés",
+    "es": "Español",
+    "zh": "Chino"
+  },
+  "login": {
+    "title": "Acceso del personal",
+    "descriptionDev": "Modo de desarrollo — seleccione un rol para acceder a las superficies de publicador, responsable, administrador o desarrollador.",
+    "descriptionSso": "Inicie sesión con el proveedor de identidad de su organización o use el inicio de sesión de desarrollo por rol.",
+    "ssoButton": "Iniciar sesión con SSO (Keycloak)",
+    "redirecting": "Redirigiendo…",
+    "orDevRole": "o continuar con un rol de desarrollo",
+    "roleLegend": "Rol",
+    "continue": "Continuar",
+    "signingIn": "Iniciando sesión…",
+    "signInFailed": "Error al iniciar sesión",
+    "ssoFailed": "Error al iniciar sesión con SSO",
+    "backToCatalog": "Volver al catálogo público",
+    "roles": {
+      "publisher": {
+        "label": "Publicador de datos",
+        "description": "Cargar conjuntos de datos y enviarlos a revisión"
+      },
+      "steward": {
+        "label": "Responsable de datos",
+        "description": "Revisar y aprobar publicaciones"
+      },
+      "admin": {
+        "label": "Administrador",
+        "description": "Consola de TI y conectores"
+      },
+      "developer": {
+        "label": "Desarrollador",
+        "description": "Claves API y explorador OpenAPI"
+      }
+    }
+  },
+  "notifications": {
+    "title": "Centro de notificaciones",
+    "markAllRead": "Marcar todo como leído",
+    "markRead": "Marcar como leído",
+    "loading": "Cargando…",
+    "empty": "Aún no hay notificaciones.",
+    "signInRequired": "Inicie sesión para ver las notificaciones.",
+    "loadFailed": "Error al cargar",
+    "viewDetails": "Ver detalles"
+  },
+  "steward": {
+    "shellTitle": "Responsable de datos",
+    "title": "Cola de revisión del responsable",
+    "subtitle": "Vista previa, señales de calidad y temporizadores SLA por envío.",
+    "navReview": "Cola de revisión",
+    "navApproval": "Aprobación senior",
+    "accessRequired": "Se requiere acceso de responsable. Inicie sesión como responsable de datos.",
+    "pendingReview": "Pendiente de revisión",
+    "pendingApproval": "Pendiente de aprobación",
+    "changesRequested": "Cambios solicitados",
+    "slaBreached": "SLA incumplido",
+    "published30d": "Publicados (30 d)",
+    "empty": "No hay envíos pendientes de revisión.",
+    "export": {
+      "button": "Exportar CSV de gobernanza",
+      "exporting": "Exportando…",
+      "rangeLabel": "Ventana del informe",
+      "rangeDays": "Últimos {{days}} días"
+    },
+    "approval": {
+      "title": "Cola de aprobación senior",
+      "description": "Flujo de dos puertas: conjuntos aprobados por el responsable y pendientes de aprobación senior.",
+      "accessRequired": "Se requiere acceso de administrador para la aprobación senior.",
+      "empty": "No hay envíos pendientes de aprobación senior.",
+      "pendingBadge": "Pendiente de aprobación senior",
+      "viewDataset": "Ver conjunto de datos",
+      "stewardNotes": "Notas del responsable: {{notes}}",
+      "submission": "Envío {{id}}…"
+    },
+    "card": {
+      "submission": "Envío {{id}}…",
+      "publisherNotes": "Notas del publicador:",
+      "failedLoad": "Error al cargar el conjunto de datos",
+      "quality": "Calidad {{score}}",
+      "rows": "{{count}} filas",
+      "noDescription": "Sin descripción.",
+      "openDataset": "Abrir página del conjunto de datos",
+      "loading": "Cargando vista previa…",
+      "sla": {
+        "none": "Sin SLA",
+        "breached": "SLA incumplido hace {{hours}} h",
+        "minutes": "{{minutes}} min hasta SLA",
+        "hours": "{{hours}} h hasta SLA"
+      }
+    },
+    "drawer": {
+      "open": "Abrir detalles",
+      "close": "Cerrar panel",
+      "title": "Detalles del envío",
+      "status": "Estado",
+      "submittedAt": "Enviado",
+      "reviewDue": "Revisión debida",
+      "slaBreached": "SLA incumplido",
+      "yes": "Sí",
+      "no": "No"
+    }
+  },
+  "admin": {
+    "shellTitle": "Admin IT",
+    "nav": {
+      "overview": "Resumen",
+      "branding": "Marca",
+      "health": "Salud",
+      "connectors": "Conectores",
+      "jobs": "Trabajos",
+      "security": "Seguridad"
+    },
+    "overview": {
+      "title": "Resumen de admin IT",
+      "description": "Salud de infraestructura, conectores y metadatos de despliegue.",
+      "tenantUsage": "Uso del inquilino",
+      "users": "Usuarios",
+      "datasets": "Conjuntos de datos",
+      "published": "{{published}}/{{total}} publicados",
+      "apiCalls": "Llamadas API",
+      "downloads": "Descargas",
+      "deployment": "Despliegue",
+      "version": "Versión",
+      "backup": "Copia de seguridad",
+      "verified": "verificado {{date}}",
+      "securityEvents": "Eventos de seguridad (7 d)",
+      "connectors": "Conectores",
+      "noConnectors": "No hay conectores configurados.",
+      "viewMatrix": "Ver matriz de conectores"
+    },
+    "connectors": {
+      "title": "Matriz de conectores",
+      "description": "Fuentes de entrada, salud de sincronización y estado del circuit breaker.",
+      "total": "Total conectores",
+      "active": "Activos",
+      "paused": "Pausados",
+      "errored": "Con error",
+      "circuitOpen": "Circuito abierto",
+      "empty": "No hay conectores configurados.",
+      "name": "Nombre",
+      "type": "Tipo",
+      "status": "Estado",
+      "circuit": "Circuito",
+      "lastSync": "Última sincronización",
+      "neverSynced": "Nunca",
+      "actions": "Acciones"
+    },
+    "health": {
+      "title": "Salud profunda",
+      "description": "Comprobaciones del sistema solo para administradores (BD, caché, almacenamiento).",
+      "overallStatus": "Estado general",
+      "checksPassing": "Comprobaciones correctas",
+      "deployment": "Modo de despliegue",
+      "version": "Versión",
+      "aiMode": "Modo IA",
+      "failingCount": "{{count}} comprobación(es) requieren atención.",
+      "empty": "No hay datos de salud disponibles."
+    },
+    "jobs": {
+      "title": "Colas de trabajos Celery",
+      "description": "Disposición de colas y monitor Flower en vivo para tareas en segundo plano.",
+      "queueCount": "Colas configuradas",
+      "monitor": "Monitor en vivo",
+      "workerQueues": "Colas de workers",
+      "priorityTiers": "6 niveles de prioridad",
+      "flowerTitle": "Monitor Celery Flower",
+      "queueCritical": "Ops urgentes",
+      "queueIngest": "Ingesta de archivos",
+      "queueRefresh": "Sync conectores",
+      "queueAi": "IA / embeddings",
+      "queueNotifications": "Alertas",
+      "queueMaintenance": "Rollups / DR",
+      "totalDepth": "Profundidad total",
+      "dataSource": "Fuente de métricas",
+      "placeholder": "Placeholder",
+      "empty": "No hay métricas de cola disponibles."
+    },
+    "branding": {
+      "title": "Marca institucional",
+      "displayName": "Nombre para mostrar",
+      "primaryColor": "Color principal",
+      "primaryHover": "Hover principal",
+      "accentColor": "Color de acento",
+      "logoUrl": "URL del logo (https)",
+      "preview": "Vista previa",
+      "previewHint": "Los colores se aplican al portal público tras guardar.",
+      "sampleButton": "Botón de ejemplo",
+      "save": "Guardar marca",
+      "saving": "Guardando…",
+      "saved": "Marca guardada.",
+      "loading": "Cargando marca…",
+      "loadFailed": "No se pudo cargar",
+      "saveFailed": "No se pudo guardar"
+    }
+  },
+  "developer": {
+    "shellTitle": "Desarrollador",
+    "nav": {
+      "overview": "Resumen",
+      "apiKeys": "Claves API",
+      "webhooks": "Webhooks",
+      "openapi": "OpenAPI",
+      "sdk": "SDK",
+      "rateLimits": "Límites de velocidad"
+    },
+    "overview": {
+      "title": "Consola de desarrollador",
+      "description": "Gestione claves API e integraciones para este inquilino.",
+      "apiKeyCount": "Claves API: {{count}}",
+      "quickStart": "Inicio rápido (Python)"
+    },
+    "apiKeys": {
+      "title": "Claves API",
+      "description": "Cree y revoque claves con alcance para acceso programático a la API."
+    },
+    "rateLimits": {
+      "title": "Límites de tasa",
+      "description": "Uso por clave frente a los límites del plan del inquilino.",
+      "tenantLimit": "Límite del inquilino (req/min)",
+      "activeKeys": "Claves API activas",
+      "totalUsed": "Solicitudes último minuto",
+      "peakUtilization": "Utilización máxima",
+      "perMin": "req/min",
+      "remaining": "{{count}} restantes · {{pct}}% utilizado",
+      "empty": "Sin claves API",
+      "emptyDescription": "Cree una clave API para ver las métricas de uso."
+    },
+    "explorer": {
+      "title": "Explorador OpenAPI",
+      "descriptionGlobal": "Documentación interactiva de la API de la plataforma (Swagger UI).",
+      "titleDataset": "Explorador API del conjunto",
+      "descriptionDataset": "Especificación OpenAPI 3.1 auto-generada para un conjunto publicado.",
+      "viewDataset": "Ver página del conjunto",
+      "loading": "Cargando especificación OpenAPI…",
+      "empty": "No hay especificación OpenAPI disponible.",
+      "specVersion": "Versión OpenAPI",
+      "apiVersion": "Versión API",
+      "pathCount": "Rutas",
+      "iframeTitle": "Documentación OpenAPI de la plataforma"
+    }
+  },
+  "search": {
+    "paletteLabel": "Paleta de comandos",
+    "palettePlaceholder": "Buscar conjuntos de datos…",
+    "paletteHint": "Ctrl+K · Esc para cerrar",
+    "searching": "Buscando…",
+    "noResults": "Sin resultados",
+    "related": "Relacionado",
+    "exactMatch": "Coincidencia"
+  },
+  "chat": {
+    "title": "Chat con el conjunto de datos",
+    "description": "Haga preguntas sobre los datos. Las respuestas citan la consulta subyacente cuando está disponible.",
+    "placeholder": "p. ej. ¿Cuántas filas? ¿Qué columnas hay?",
+    "ask": "Preguntar",
+    "thinking": "Pensando…",
+    "failed": "Error en el chat",
+    "aiBadge": "IA",
+    "confidence": "Confianza {{percent}}%",
+    "lowConfidence": "Baja confianza — verifique los datos fuente.",
+    "citationColumns": "Columnas citadas"
+  },
+  "feedback": {
+    "title": "Valorar este conjunto de datos",
+    "ratingLabel": "Valoración",
+    "stars": "{{count}} estrellas",
+    "commentLabel": "Comentario (opcional)",
+    "commentPlaceholder": "¿Cómo usa estos datos?",
+    "submit": "Enviar comentarios",
+    "sending": "Enviando…",
+    "submitFailed": "Error al enviar",
+    "thankYou": "Gracias — sus comentarios fueron enviados."
+  },
+  "publisher": {
+    "shellTitle": "Publicador",
+    "dashboard": {
+      "title": "Panel del publicador",
+      "description": "Sus conjuntos de datos, estado del flujo de trabajo y acciones rápidas.",
+      "publishNew": "Publicar nuevo conjunto de datos",
+      "loading": "Cargando sus conjuntos de datos…",
+      "loadFailed": "Error al cargar conjuntos de datos",
+      "empty": "Aún no hay conjuntos de datos",
+      "emptyDescription": "Cree un borrador y cargue un archivo para iniciar el flujo de publicación.",
+      "yourDatasets": "Sus conjuntos de datos",
+      "views": "Vistas",
+      "aiQueries": "Consultas de IA"
+    },
+    "timeline": {
+      "title": "Actividad del flujo de trabajo",
+      "description": "Eventos de gobernanza recientes en sus conjuntos de datos.",
+      "loading": "Cargando historial…",
+      "loadFailed": "No se pudo cargar el historial",
+      "empty": "Aún no hay eventos de flujo de trabajo.",
+      "viewDataset": "Ver conjunto de datos"
+    },
+    "staleness": {
+      "title": "{{count}} conjunto(s) requieren atención",
+      "description": "Algunos conjuntos pueden estar desactualizados o pendientes de actualización.",
+      "descriptionStale": "{{stale}} conjunto(s) marcados como obsoletos — revise y actualice pronto.",
+      "more": "+{{count}} más"
+    },
+    "feedback": {
+      "title": "Comentarios ciudadanos",
+      "loading": "Cargando comentarios…",
+      "empty": "Aún no hay comentarios en sus conjuntos de datos publicados.",
+      "stars": "{{count}}★"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+# Environment — NEVER commit secrets
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.egg
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+coverage.xml
+celerybeat-schedule
+
+# Node
+node_modules/
+.next/
+out/
+frontend/.turbo/
+
+# Docker
+docker-compose.override.yml
+
+# IDE
+.idea/
+.vscode/settings.json
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets / certs
+*.pem
+*.key
+*.crt
+*.p12
+
+# Logs
+*.log
+logs/

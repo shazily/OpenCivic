@@ -1,0 +1,424 @@
+{
+  "nav": {
+    "catalog": "الفهرس",
+    "dashboard": "لوحة التحكم",
+    "publish": "نشر",
+    "notifications": "الإشعارات",
+    "signOut": "تسجيل الخروج"
+  },
+  "public": {
+    "catalog": "الفهرس",
+    "staffSignIn": "تسجيل دخول الموظفين"
+  },
+  "catalog": {
+    "title": "فهرس البيانات المفتوحة",
+    "subtitle": "تصفح مجموعات البيانات المنشورة على هذه البوابة. تظهر هنا فقط مجموعات البيانات التي اكتملت مراجعتها ونشرها.",
+    "skipToContent": "انتقل إلى المحتوى",
+    "searchResults": "نتائج البحث عن \"{{query}}\"",
+    "tagFilter": " · الوسم: {{tag}}",
+    "loadError": "تعذر تحميل الفهرس: {{message}}",
+    "noMatch": "لا توجد مجموعات بيانات منشورة تطابق بحثك.",
+    "empty": "لا توجد مجموعات بيانات منشورة بعد.",
+    "staffSignIn": "تسجيل دخول الموظفين",
+    "staffSignInHint": "لتحميل البيانات ونشرها.",
+    "featuredTitle": "مجموعات بيانات مميزة",
+    "featuredSubtitle": "أعلى درجات الجودة بين البيانات المنشورة حديثاً.",
+    "searchPlaceholder": "البحث في مجموعات البيانات…",
+    "search": "بحث",
+    "clear": "مسح",
+    "semanticDegraded": "البحث الدلالي غير متاح مؤقتاً — يتم عرض نتائج الكلمات المفتاحية فقط."
+  },
+  "dataset": {
+    "backToCatalog": "← العودة إلى الفهرس",
+    "noDescription": "لا يوجد وصف.",
+    "quality": "الجودة {{score}}",
+    "rows": "الصفوف",
+    "views": "المشاهدات",
+    "downloads": "التنزيلات",
+    "rating": "التقييم",
+    "previewTitle": "معاينة البيانات",
+    "noDataYet": "لا توجد بيانات مستوردة بعد.",
+    "previewLoading": "جارٍ تحميل المعاينة…",
+    "download": "تنزيل",
+    "downloading": "جارٍ التنزيل…",
+    "downloadFormat": "التنسيق",
+    "downloadCsv": "CSV",
+    "downloadJson": "JSON",
+    "downloadParquet": "Parquet (رابط موقّع)",
+    "downloadPreparing": "جارٍ تجهيز الملف…",
+    "downloadOpening": "جارٍ فتح التنزيل الآمن…",
+    "downloadEmpty": "لا توجد بيانات للتنزيل",
+    "downloadFailed": "فشل التنزيل ({{status}})",
+    "downloadFailedGeneric": "فشل التنزيل",
+    "engagementTrend": "التفاعل خلال 14 يوماً (مشاهدات + تنزيلات)",
+    "embedTitle": "تضمين مجموعة البيانات",
+    "embedDescription": "معاينة ونسخ iframe أو مقتطف API لموقعك.",
+    "embedIframe": "iframe متجاوب",
+    "embedApi": "REST API (curl)",
+    "embedCopy": "نسخ المقتطف",
+    "embedCopied": "تم النسخ",
+    "apiExplorer": {
+      "title": "مستكشف API",
+      "description": "نقطة REST فورية ومواصفات OpenAPI تلقائية لهذه المجموعة.",
+      "tabRest": "مقتطفات REST",
+      "tabOpenApi": "مواصفات OpenAPI",
+      "dataEndpoint": "واجهة البيانات (curl)",
+      "powershell": "PowerShell",
+      "loading": "جارٍ تحميل مواصفات OpenAPI…",
+      "pathCount": "{{count}} مسار في المواصفات",
+      "fetchSpec": "نسخ رابط المواصفات",
+      "openDeveloperConsole": "فتح في وحدة المطور",
+      "tabOData": "OData",
+      "loadingOData": "جارٍ تحميل خدمة OData…",
+      "odataVersion": "خدمة OData {{version}}",
+      "odataServiceRoot": "جذر الخدمة",
+      "odataExample": "مثال Excel / Power BI",
+      "odataPowerQuery": "Power Query M (Excel)",
+      "odataMetadata": "رابط $metadata"
+    }
+  },
+  "home": {
+    "title": "بيانات مفتوحة يمكن الوثوق بها",
+    "subtitle": "مجموعات بيانات حكومية مع سير مراجعة ودرجات جودة وواجهات API فورية.",
+    "publishedDatasets": "مجموعات منشورة",
+    "instantApi": "API عند النشر",
+    "instantApiValue": "نعم",
+    "openLicence": "تراخيص مفتوحة",
+    "openLicenceValue": "افتراضي",
+    "trustQuality": "جودة مقيّمة",
+    "trustReviewed": "مراجعة بشرية",
+    "trustMachineReadable": "APIs قابلة للقراءة آلياً",
+    "browseCatalog": "تصفح الفهرس"
+  },
+  "publish": {
+    "title": "نشر مجموعة بيانات",
+    "description": "أنشئ مسودة مجموعة بيانات وحمّل ملف CSV أو TSV أو JSON أو JSONL أو XLSX أو Parquet. أرسل للمراجعة بعد اكتمال الاستيراد.",
+    "tusHint": "الملفات الكبيرة: فعّل ملف tus في Docker للرفع القابل للاستئناف عبر {{endpoint}}",
+    "titleLabel": "العنوان",
+    "slugLabel": "المعرّف",
+    "descriptionLabel": "الوصف",
+    "fileLabel": "ملف البيانات (CSV, TSV, JSON, JSONL, XLSX, Parquet)",
+    "chooseFile": "اختر ملف CSV أو TSV أو JSON أو JSONL أو XLSX أو Parquet للتحميل.",
+    "creating": "جارٍ إنشاء مسودة مجموعة البيانات…",
+    "uploading": "جارٍ تحميل الملف…",
+    "uploadingTus": "جارٍ التحميل عبر TUS… {{percent}}%",
+    "processing": "جارٍ معالجة الاستيراد…",
+    "queued": "تم إدراج التحميل في قائمة الانتظار. حدّث صفحة مجموعة البيانات خلال ثوانٍ.",
+    "submit": "نشر مجموعة البيانات",
+    "submitting": "جارٍ النشر…",
+    "failed": "فشل النشر"
+  },
+  "language": {
+    "label": "اللغة",
+    "en": "English",
+    "ar": "العربية",
+    "fr": "Français",
+    "es": "Español",
+    "zh": "中文"
+  },
+  "login": {
+    "title": "تسجيل دخول الموظفين",
+    "descriptionDev": "وضع التطوير — اختر دورًا للوصول إلى واجهات الناشر أو المشرف أو المسؤول أو المطور.",
+    "descriptionSso": "سجّل الدخول عبر موفر هوية مؤسستك أو استخدم تسجيل الدخول التجريبي بالدور.",
+    "ssoButton": "تسجيل الدخول عبر SSO (Keycloak)",
+    "redirecting": "جارٍ إعادة التوجيه…",
+    "orDevRole": "أو المتابعة بدور تجريبي",
+    "roleLegend": "الدور",
+    "continue": "متابعة",
+    "signingIn": "جارٍ تسجيل الدخول…",
+    "signInFailed": "فشل تسجيل الدخول",
+    "ssoFailed": "فشل تسجيل الدخول عبر SSO",
+    "backToCatalog": "العودة إلى الفهرس العام",
+    "roles": {
+      "publisher": {
+        "label": "ناشر البيانات",
+        "description": "تحميل مجموعات البيانات وإرسالها للمراجعة"
+      },
+      "steward": {
+        "label": "مشرف البيانات",
+        "description": "مراجعة الموافقة على المنشورات"
+      },
+      "admin": {
+        "label": "مسؤول المؤسسة",
+        "description": "وحدة إدارة تقنية المعلومات والموصلات"
+      },
+      "developer": {
+        "label": "مطور",
+        "description": "مفاتيح API ومستكشف OpenAPI"
+      }
+    }
+  },
+  "notifications": {
+    "title": "مركز الإشعارات",
+    "markAllRead": "تعليم الكل كمقروء",
+    "markRead": "تعليم كمقروء",
+    "loading": "جارٍ التحميل…",
+    "empty": "لا توجد إشعارات بعد.",
+    "signInRequired": "سجّل الدخول لعرض الإشعارات.",
+    "loadFailed": "فشل التحميل",
+    "viewDetails": "عرض التفاصيل"
+  },
+  "steward": {
+    "shellTitle": "مشرف البيانات",
+    "title": "قائمة مراجعة المشرف",
+    "subtitle": "معاينة مجموعة البيانات وإشارات الجودة ومؤقتات SLA لكل طلب.",
+    "navReview": "قائمة المراجعة",
+    "navApproval": "الموافقة العليا",
+    "accessRequired": "مطلوب صلاحية المشرف. سجّل الدخول كمشرف بيانات.",
+    "pendingReview": "قيد المراجعة",
+    "pendingApproval": "قيد الموافقة",
+    "changesRequested": "تغييرات مطلوبة",
+    "slaBreached": "خرق SLA",
+    "published30d": "منشور (30 يومًا)",
+    "empty": "لا توجد طلبات بانتظار المراجعة.",
+    "export": {
+      "button": "تصدير CSV للحوكمة",
+      "exporting": "جارٍ التصدير…",
+      "rangeLabel": "نافذة التقرير",
+      "rangeDays": "آخر {{days}} يومًا"
+    },
+    "approval": {
+      "title": "قائمة الموافقة العليا",
+      "description": "سير عمل ببوابتين: مجموعات بيانات وافق عليها المشرف وتنتظر الموافقة العليا.",
+      "accessRequired": "مطلوب صلاحية مسؤول المؤسسة للموافقة العليا.",
+      "empty": "لا توجد طلبات بانتظار الموافقة العليا.",
+      "pendingBadge": "بانتظار الموافقة العليا",
+      "viewDataset": "عرض مجموعة البيانات",
+      "stewardNotes": "ملاحظات المشرف: {{notes}}",
+      "submission": "طلب {{id}}…"
+    },
+    "card": {
+      "submission": "طلب {{id}}…",
+      "publisherNotes": "ملاحظات الناشر:",
+      "failedLoad": "فشل تحميل مجموعة البيانات",
+      "quality": "الجودة {{score}}",
+      "rows": "{{count}} صف",
+      "noDescription": "لا يوجد وصف.",
+      "openDataset": "فتح صفحة مجموعة البيانات",
+      "loading": "جارٍ تحميل المعاينة…",
+      "sla": {
+        "none": "لا SLA",
+        "breached": "خرق SLA منذ {{hours}} س",
+        "minutes": "{{minutes}} د حتى SLA",
+        "hours": "{{hours}} س حتى SLA"
+      }
+    },
+    "drawer": {
+      "open": "فتح التفاصيل",
+      "close": "إغلاق اللوحة",
+      "title": "تفاصيل الطلب",
+      "status": "الحالة",
+      "submittedAt": "تاريخ الإرسال",
+      "reviewDue": "موعد المراجعة",
+      "slaBreached": "خرق SLA",
+      "yes": "نعم",
+      "no": "لا"
+    }
+  },
+  "admin": {
+    "shellTitle": "مسؤول IT",
+    "nav": {
+      "overview": "نظرة عامة",
+      "branding": "العلامة التجارية",
+      "health": "الصحة",
+      "connectors": "الموصلات",
+      "jobs": "المهام",
+      "security": "الأمان"
+    },
+    "overview": {
+      "title": "نظرة عامة لمسؤول IT",
+      "description": "صحة البنية التحتية والموصلات وبيانات النشر.",
+      "tenantUsage": "استخدام المستأجر",
+      "users": "المستخدمون",
+      "datasets": "مجموعات البيانات",
+      "published": "{{published}}/{{total}} منشور",
+      "apiCalls": "استدعاءات API",
+      "downloads": "التنزيلات",
+      "deployment": "النشر",
+      "version": "الإصدار",
+      "backup": "النسخ الاحتياطي",
+      "verified": "تم التحقق {{date}}",
+      "securityEvents": "أحداث الأمان (7 أيام)",
+      "connectors": "الموصلات",
+      "noConnectors": "لا توجد موصلات مُكوَّنة.",
+      "viewMatrix": "عرض مصفوفة الموصلات"
+    },
+    "connectors": {
+      "title": "مصفوفة الموصلات",
+      "description": "مصادر البيانات الواردة وصحة المزامنة وحالة قاطع الدائرة.",
+      "total": "إجمالي الموصلات",
+      "active": "نشط",
+      "paused": "متوقف",
+      "errored": "خطأ",
+      "circuitOpen": "دائرة مفتوحة",
+      "empty": "لا توجد موصلات مُكوَّنة بعد.",
+      "name": "الاسم",
+      "type": "النوع",
+      "status": "الحالة",
+      "circuit": "الدائرة",
+      "lastSync": "آخر مزامنة",
+      "neverSynced": "أبداً",
+      "actions": "إجراءات"
+    },
+    "health": {
+      "title": "الصحة العميقة",
+      "description": "فحوصات النظام للمسؤولين عبر قاعدة البيانات والذاكرة المؤقتة والتخزين.",
+      "overallStatus": "الحالة العامة",
+      "checksPassing": "الفحوصات الناجحة",
+      "deployment": "وضع النشر",
+      "version": "الإصدار",
+      "aiMode": "وضع الذكاء الاصطناعي",
+      "failingCount": "{{count}} فحص(فحوصات) تحتاج انتباهاً.",
+      "empty": "لا تتوفر بيانات صحة."
+    },
+    "jobs": {
+      "title": "طوابير مهام Celery",
+      "description": "تخطيط الطوابير ومراقب Flower المباشر للمهام الخلفية.",
+      "queueCount": "الطوابير المُكوَّنة",
+      "monitor": "المراقبة المباشرة",
+      "workerQueues": "طوابير العمال",
+      "priorityTiers": "6 مستويات أولوية",
+      "flowerTitle": "مراقب Celery Flower",
+      "queueCritical": "عمليات عاجلة",
+      "queueIngest": "استيراد الملفات",
+      "queueRefresh": "مزامنة الموصلات",
+      "queueAi": "ذكاء اصطناعي / تضمين",
+      "queueNotifications": "تنبيهات",
+      "queueMaintenance": "تجميع / DR",
+      "totalDepth": "إجمالي عمق الطابور",
+      "dataSource": "مصدر المقاييس",
+      "placeholder": "عنصر نائب",
+      "empty": "لا تتوفر مقاييس الطوابير."
+    },
+    "branding": {
+      "title": "العلامة التجارية",
+      "displayName": "اسم العرض",
+      "primaryColor": "اللون الأساسي",
+      "primaryHover": "تحويم الأساسي",
+      "accentColor": "لون التمييز",
+      "logoUrl": "رابط الشعار (https)",
+      "preview": "معاينة مباشرة",
+      "previewHint": "تُطبَّق الألوان على البوابة العامة بعد الحفظ.",
+      "sampleButton": "زر نموذجي",
+      "save": "حفظ العلامة",
+      "saving": "جارٍ الحفظ…",
+      "saved": "تم حفظ العلامة.",
+      "loading": "جارٍ تحميل العلامة…",
+      "loadFailed": "تعذر تحميل العلامة",
+      "saveFailed": "تعذر حفظ العلامة"
+    }
+  },
+  "developer": {
+    "shellTitle": "المطور",
+    "nav": {
+      "overview": "نظرة عامة",
+      "apiKeys": "مفاتيح API",
+      "webhooks": "Webhooks",
+      "openapi": "OpenAPI",
+      "sdk": "SDK",
+      "rateLimits": "حدود المعدل"
+    },
+    "overview": {
+      "title": "وحدة المطور",
+      "description": "إدارة مفاتيح API والتكامل لهذا المستأجر.",
+      "apiKeyCount": "مفاتيح API: {{count}}",
+      "quickStart": "بدء سريع (Python)"
+    },
+    "apiKeys": {
+      "title": "مفاتيح API",
+      "description": "إنشاء وإلغاء مفاتيح محددة النطاق للوصول البرمجي إلى واجهة OpenCivic."
+    },
+    "rateLimits": {
+      "title": "حدود المعدل",
+      "description": "استخدام كل مفتاح مقابل حدود خطة المستأجر.",
+      "tenantLimit": "حد المستأجر (طلب/دقيقة)",
+      "activeKeys": "مفاتيح نشطة",
+      "totalUsed": "طلبات الدقيقة الأخيرة",
+      "peakUtilization": "أقصى استخدام",
+      "perMin": "طلب/دقيقة",
+      "remaining": "{{count}} متبقٍ · {{pct}}% مستخدم",
+      "empty": "لا مفاتيح API بعد",
+      "emptyDescription": "أنشئ مفتاح API لعرض مقاييس الاستخدام."
+    },
+    "explorer": {
+      "title": "مستكشف OpenAPI",
+      "descriptionGlobal": "توثيق واجهة المنصة التفاعلي (Swagger UI).",
+      "titleDataset": "مستكشف API للمجموعة",
+      "descriptionDataset": "مواصفات OpenAPI 3.1 تلقائية لمجموعة بيانات منشورة.",
+      "viewDataset": "عرض صفحة المجموعة",
+      "loading": "جارٍ تحميل مواصفات OpenAPI…",
+      "empty": "لا تتوفر مواصفات OpenAPI.",
+      "specVersion": "إصدار OpenAPI",
+      "apiVersion": "إصدار API",
+      "pathCount": "المسارات",
+      "iframeTitle": "توثيق OpenAPI للمنصة"
+    }
+  },
+  "search": {
+    "paletteLabel": "لوحة الأوامر",
+    "palettePlaceholder": "البحث في مجموعات البيانات…",
+    "paletteHint": "Ctrl+K · Esc للإغلاق",
+    "searching": "جارٍ البحث…",
+    "noResults": "لا نتائج",
+    "related": "ذات صلة",
+    "exactMatch": "تطابق"
+  },
+  "chat": {
+    "title": "الدردشة مع مجموعة البيانات",
+    "description": "اطرح أسئلة حول البيانات. تستشهد الإجابات بالاستعلام الأساسي عند توفره.",
+    "placeholder": "مثال: كم عدد الصفوف؟ ما الأعمدة المتاحة؟",
+    "ask": "اسأل",
+    "thinking": "جارٍ التفكير…",
+    "failed": "فشلت الدردشة",
+    "aiBadge": "ذكاء اصطناعي",
+    "confidence": "الثقة {{percent}}%",
+    "lowConfidence": "ثقة منخفضة — تحقق من البيانات المصدر.",
+    "citationColumns": "الأعمدة المستشهد بها"
+  },
+  "feedback": {
+    "title": "قيّم مجموعة البيانات",
+    "ratingLabel": "التقييم",
+    "stars": "{{count}} نجوم",
+    "commentLabel": "تعليق (اختياري)",
+    "commentPlaceholder": "كيف تستخدم هذه البيانات؟",
+    "submit": "إرسال الملاحظات",
+    "sending": "جارٍ الإرسال…",
+    "submitFailed": "فشل الإرسال",
+    "thankYou": "شكرًا — تم إرسال ملاحظاتك."
+  },
+  "publisher": {
+    "shellTitle": "الناشر",
+    "dashboard": {
+      "title": "لوحة الناشر",
+      "description": "مجموعات بياناتك وحالة سير العمل والإجراءات السريعة.",
+      "publishNew": "نشر مجموعة بيانات جديدة",
+      "loading": "جارٍ تحميل مجموعات البيانات…",
+      "loadFailed": "فشل تحميل مجموعات البيانات",
+      "empty": "لا توجد مجموعات بيانات بعد",
+      "emptyDescription": "أنشئ مسودة وحمّل ملفًا لبدء سير عمل النشر.",
+      "yourDatasets": "مجموعات بياناتك",
+      "views": "المشاهدات",
+      "aiQueries": "استعلامات الذكاء الاصطناعي"
+    },
+    "timeline": {
+      "title": "نشاط سير العمل",
+      "description": "أحداث الحوكمة الأخيرة لمجموعات بياناتك.",
+      "loading": "جارٍ تحميل سجل سير العمل…",
+      "loadFailed": "تعذر تحميل سجل سير العمل",
+      "empty": "لا أحداث سير عمل بعد.",
+      "viewDataset": "عرض مجموعة البيانات"
+    },
+    "staleness": {
+      "title": "{{count}} مجموعة بيانات تحتاج انتباهًا",
+      "description": "قد تكون بعض المجموعات قديمة أو بانتظار التحديث.",
+      "descriptionStale": "{{stale}} مجموعة مُعلَّمة كقديمة — راجعها وحدّثها قريبًا.",
+      "more": "+{{count}} أخرى"
+    },
+    "feedback": {
+      "title": "ملاحظات المواطنين",
+      "loading": "جارٍ تحميل الملاحظات…",
+      "empty": "لا توجد ملاحظات على مجموعات البيانات المنشورة بعد.",
+      "stars": "{{count}}★"
+    }
+  }
+}

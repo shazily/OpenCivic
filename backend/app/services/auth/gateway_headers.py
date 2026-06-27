@@ -1,0 +1,11 @@
+"""Shared APISIX → FastAPI trusted identity header names."""
+
+GATEWAY_TRUST_HEADER = "X-OpenCivic-Gateway-Trust"
+GATEWAY_USER_HEADER = "X-OpenCivic-User-Id"
+GATEWAY_TENANT_HEADER = "X-OpenCivic-Tenant-Id"
+GATEWAY_ROLES_HEADER = "X-OpenCivic-Roles"
+GATEWAY_AUTH_TYPE_HEADER = "X-OpenCivic-Auth-Type"
+GATEWAY_API_KEY_ID_HEADER = "X-OpenCivic-Api-Key-Id"
+RATE_LIMIT_LIMIT_HEADER = "X-RateLimit-Limit"
+RATE_LIMIT_REMAINING_HEADER = "X-RateLimit-Remaining"
+RATE_LIMIT_RESET_HEADER = "X-RateLimit-Reset"

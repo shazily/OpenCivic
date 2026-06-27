@@ -1,0 +1,39 @@
+{{- if .Values.worker.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "opencivic.fullname" . }}-beat
+  labels:
+    app.kubernetes.io/name: {{ include "opencivic.name" . }}
+    app.kubernetes.io/component: beat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "opencivic.name" . }}
+      app.kubernetes.io/component: beat
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "opencivic.name" . }}
+        app.kubernetes.io/component: beat
+    spec:
+      containers:
+        - name: beat
+          image: "{{ .Values.image.api.repository }}:{{ .Values.image.api.tag }}"
+          imagePullPolicy: {{ .Values.image.api.pullPolicy }}
+          command: ["celery", "-A", "app.workers.celery_app.celery_app", "beat", "--loglevel=INFO"]
+          env:
+            - name: DEPLOYMENT_MODE
+              value: {{ .Values.env.deploymentMode | quote }}
+            - name: DATABASE_URL
+              value: {{ include "opencivic.databaseUrl" . | quote }}
+            - name: VALKEY_URL
+              value: {{ include "opencivic.valkeyUrl" . | quote }}
+            - name: CELERY_BROKER_URL
+              value: {{ include "opencivic.valkeyUrl" . | quote }}
+            - name: CELERY_RESULT_BACKEND
+              value: {{ include "opencivic.valkeyUrl" . | quote }}
+            - name: AI_MODE
+              value: {{ .Values.env.aiMode | quote }}
+{{- end }}

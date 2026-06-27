@@ -1,0 +1,424 @@
+{
+  "nav": {
+    "catalog": "Catalogue",
+    "dashboard": "Tableau de bord",
+    "publish": "Publier",
+    "notifications": "Notifications",
+    "signOut": "Déconnexion"
+  },
+  "public": {
+    "catalog": "Catalogue",
+    "staffSignIn": "Connexion personnel"
+  },
+  "catalog": {
+    "title": "Catalogue de données ouvertes",
+    "subtitle": "Parcourez les jeux de données publiés sur ce portail. Seuls les jeux de données ayant terminé la revue et la publication apparaissent ici.",
+    "skipToContent": "Aller au contenu",
+    "searchResults": "Résultats de recherche pour « {{query}} »",
+    "tagFilter": " · étiquette : {{tag}}",
+    "loadError": "Impossible de charger le catalogue : {{message}}",
+    "noMatch": "Aucun jeu de données publié ne correspond à votre recherche.",
+    "empty": "Aucun jeu de données publié pour le moment.",
+    "staffSignIn": "Connexion personnel",
+    "staffSignInHint": "pour téléverser et publier des données.",
+    "featuredTitle": "Jeux de données à la une",
+    "featuredSubtitle": "Meilleurs scores de qualité parmi les publications récentes.",
+    "searchPlaceholder": "Rechercher des jeux de données…",
+    "search": "Rechercher",
+    "clear": "Effacer",
+    "semanticDegraded": "La recherche sémantique est temporairement indisponible — résultats par mots-clés uniquement."
+  },
+  "dataset": {
+    "backToCatalog": "← Retour au catalogue",
+    "noDescription": "Aucune description fournie.",
+    "quality": "Qualité {{score}}",
+    "rows": "Lignes",
+    "views": "Vues",
+    "downloads": "Téléchargements",
+    "rating": "Note",
+    "previewTitle": "Aperçu des données",
+    "noDataYet": "Aucune donnée importée pour le moment.",
+    "previewLoading": "Chargement de l'aperçu…",
+    "download": "Télécharger",
+    "downloading": "Téléchargement…",
+    "downloadFormat": "Format",
+    "downloadCsv": "CSV",
+    "downloadJson": "JSON",
+    "downloadParquet": "Parquet (URL signée)",
+    "downloadPreparing": "Préparation du fichier…",
+    "downloadOpening": "Ouverture du téléchargement sécurisé…",
+    "downloadEmpty": "Aucune donnée à télécharger",
+    "downloadFailed": "Échec du téléchargement ({{status}})",
+    "downloadFailedGeneric": "Échec du téléchargement",
+    "engagementTrend": "Engagement sur 14 jours (vues + téléchargements)",
+    "embedTitle": "Intégrer ce jeu de données",
+    "embedDescription": "Aperçu et copie d'un iframe ou extrait API pour votre site.",
+    "embedIframe": "Iframe responsive",
+    "embedApi": "API REST (curl)",
+    "embedCopy": "Copier l'extrait",
+    "embedCopied": "Copié",
+    "apiExplorer": {
+      "title": "Explorateur API",
+      "description": "Point REST instantané et spécification OpenAPI auto-générée pour ce jeu de données.",
+      "tabRest": "Extraits REST",
+      "tabOpenApi": "Spéc OpenAPI",
+      "dataEndpoint": "API données (curl)",
+      "powershell": "PowerShell",
+      "loading": "Chargement de la spec OpenAPI…",
+      "pathCount": "{{count}} chemin(s) dans la spec",
+      "fetchSpec": "Copier l'URL de la spec",
+      "openDeveloperConsole": "Ouvrir dans la console développeur",
+      "tabOData": "OData",
+      "loadingOData": "Chargement du service OData…",
+      "odataVersion": "Service OData {{version}}",
+      "odataServiceRoot": "Racine du service",
+      "odataExample": "Exemple Excel / Power BI",
+      "odataPowerQuery": "Power Query M (Excel)",
+      "odataMetadata": "URL $metadata"
+    }
+  },
+  "home": {
+    "title": "Des données ouvertes de confiance",
+    "subtitle": "Jeux de données publics avec workflows de revue, scores de qualité et API instantanées.",
+    "publishedDatasets": "Jeux publiés",
+    "instantApi": "API à la publication",
+    "instantApiValue": "Oui",
+    "openLicence": "Licences ouvertes",
+    "openLicenceValue": "Par défaut",
+    "trustQuality": "Qualité notée",
+    "trustReviewed": "Revu par un humain",
+    "trustMachineReadable": "APIs machine-readable",
+    "browseCatalog": "Parcourir le catalogue"
+  },
+  "publish": {
+    "title": "Publier un jeu de données",
+    "description": "Créez un brouillon et téléversez un fichier CSV, TSV, JSON, JSONL, XLSX ou Parquet. Soumettez pour revue après l'ingestion.",
+    "tusHint": "Fichiers volumineux : activez le profil tus compose pour des téléversements TUS reprise à {{endpoint}}",
+    "titleLabel": "Titre",
+    "slugLabel": "Identifiant",
+    "descriptionLabel": "Description",
+    "fileLabel": "Fichier de données (CSV, TSV, JSON, JSONL, XLSX, Parquet)",
+    "chooseFile": "Choisissez un fichier CSV, TSV, JSON, JSONL, XLSX ou Parquet à téléverser.",
+    "creating": "Création du brouillon…",
+    "uploading": "Téléversement du fichier…",
+    "uploadingTus": "Téléversement TUS… {{percent}} %",
+    "processing": "Traitement de l'ingestion…",
+    "queued": "Téléversement en file d'attente. Actualisez la page du jeu de données dans quelques secondes.",
+    "submit": "Publier le jeu de données",
+    "submitting": "Publication…",
+    "failed": "Échec de la publication"
+  },
+  "language": {
+    "label": "Langue",
+    "en": "Anglais",
+    "ar": "Arabe",
+    "fr": "Français",
+    "es": "Espagnol",
+    "zh": "Chinois"
+  },
+  "login": {
+    "title": "Connexion personnel",
+    "descriptionDev": "Mode développement — sélectionnez un rôle pour accéder aux espaces éditeur, responsable, admin ou développeur.",
+    "descriptionSso": "Connectez-vous avec le fournisseur d'identité de votre organisation ou utilisez la connexion de développement par rôle.",
+    "ssoButton": "Connexion SSO (Keycloak)",
+    "redirecting": "Redirection…",
+    "orDevRole": "ou continuer avec un rôle de développement",
+    "roleLegend": "Rôle",
+    "continue": "Continuer",
+    "signingIn": "Connexion…",
+    "signInFailed": "Échec de la connexion",
+    "ssoFailed": "Échec de la connexion SSO",
+    "backToCatalog": "Retour au catalogue public",
+    "roles": {
+      "publisher": {
+        "label": "Éditeur de données",
+        "description": "Téléverser des jeux de données et les soumettre à la revue"
+      },
+      "steward": {
+        "label": "Responsable des données",
+        "description": "Examiner et approuver les publications"
+      },
+      "admin": {
+        "label": "Administrateur",
+        "description": "Console IT et connecteurs"
+      },
+      "developer": {
+        "label": "Développeur",
+        "description": "Clés API et explorateur OpenAPI"
+      }
+    }
+  },
+  "notifications": {
+    "title": "Centre de notifications",
+    "markAllRead": "Tout marquer comme lu",
+    "markRead": "Marquer comme lu",
+    "loading": "Chargement…",
+    "empty": "Aucune notification pour le moment.",
+    "signInRequired": "Connectez-vous pour voir les notifications.",
+    "loadFailed": "Échec du chargement",
+    "viewDetails": "Voir les détails"
+  },
+  "steward": {
+    "shellTitle": "Responsable des données",
+    "title": "File d'attente de revue",
+    "subtitle": "Aperçu des jeux de données, signaux de qualité et SLA pour chaque soumission.",
+    "navReview": "File de revue",
+    "navApproval": "Approbation senior",
+    "accessRequired": "Accès responsable requis. Connectez-vous en tant que responsable des données.",
+    "pendingReview": "En attente de revue",
+    "pendingApproval": "En attente d'approbation",
+    "changesRequested": "Modifications demandées",
+    "slaBreached": "SLA dépassé",
+    "published30d": "Publiés (30 j)",
+    "empty": "Aucune soumission en attente de revue.",
+    "export": {
+      "button": "Exporter CSV gouvernance",
+      "exporting": "Export…",
+      "rangeLabel": "Période du rapport",
+      "rangeDays": "{{days}} derniers jours"
+    },
+    "approval": {
+      "title": "File d'approbation senior",
+      "description": "Workflow à deux niveaux : jeux de données approuvés par le responsable et en attente d'approbation senior.",
+      "accessRequired": "Accès administrateur requis pour l'approbation senior.",
+      "empty": "Aucune soumission en attente d'approbation senior.",
+      "pendingBadge": "En attente d'approbation senior",
+      "viewDataset": "Voir le jeu de données",
+      "stewardNotes": "Notes du responsable : {{notes}}",
+      "submission": "Soumission {{id}}…"
+    },
+    "card": {
+      "submission": "Soumission {{id}}…",
+      "publisherNotes": "Notes du publieur :",
+      "failedLoad": "Échec du chargement du jeu de données",
+      "quality": "Qualité {{score}}",
+      "rows": "{{count}} lignes",
+      "noDescription": "Aucune description.",
+      "openDataset": "Ouvrir la page du jeu de données",
+      "loading": "Chargement de l'aperçu…",
+      "sla": {
+        "none": "Pas de SLA",
+        "breached": "SLA dépassé il y a {{hours}} h",
+        "minutes": "{{minutes}} min avant SLA",
+        "hours": "{{hours}} h avant SLA"
+      }
+    },
+    "drawer": {
+      "open": "Ouvrir les détails",
+      "close": "Fermer le panneau",
+      "title": "Détails de la soumission",
+      "status": "Statut",
+      "submittedAt": "Soumis le",
+      "reviewDue": "Échéance de revue",
+      "slaBreached": "SLA dépassé",
+      "yes": "Oui",
+      "no": "Non"
+    }
+  },
+  "admin": {
+    "shellTitle": "Admin IT",
+    "nav": {
+      "overview": "Vue d'ensemble",
+      "branding": "Image de marque",
+      "health": "Santé",
+      "connectors": "Connecteurs",
+      "jobs": "Tâches",
+      "security": "Sécurité"
+    },
+    "overview": {
+      "title": "Vue d'ensemble admin IT",
+      "description": "Santé de l'infrastructure, connecteurs et métadonnées de déploiement.",
+      "tenantUsage": "Utilisation du locataire",
+      "users": "Utilisateurs",
+      "datasets": "Jeux de données",
+      "published": "{{published}}/{{total}} publiés",
+      "apiCalls": "Appels API",
+      "downloads": "Téléchargements",
+      "deployment": "Déploiement",
+      "version": "Version",
+      "backup": "Sauvegarde",
+      "verified": "vérifié {{date}}",
+      "securityEvents": "Événements de sécurité (7 j)",
+      "connectors": "Connecteurs",
+      "noConnectors": "Aucun connecteur configuré.",
+      "viewMatrix": "Voir la matrice des connecteurs"
+    },
+    "connectors": {
+      "title": "Matrice des connecteurs",
+      "description": "Sources entrantes, santé de synchronisation et état du circuit breaker.",
+      "total": "Total connecteurs",
+      "active": "Actifs",
+      "paused": "En pause",
+      "errored": "En erreur",
+      "circuitOpen": "Circuit ouvert",
+      "empty": "Aucun connecteur configuré.",
+      "name": "Nom",
+      "type": "Type",
+      "status": "Statut",
+      "circuit": "Circuit",
+      "lastSync": "Dernière synchro",
+      "neverSynced": "Jamais",
+      "actions": "Actions"
+    },
+    "health": {
+      "title": "Santé approfondie",
+      "description": "Contrôles système réservés aux administrateurs (base, cache, stockage).",
+      "overallStatus": "État global",
+      "checksPassing": "Contrôles réussis",
+      "deployment": "Mode de déploiement",
+      "version": "Version",
+      "aiMode": "Mode IA",
+      "failingCount": "{{count}} contrôle(s) nécessitent une attention.",
+      "empty": "Aucune donnée de santé disponible."
+    },
+    "jobs": {
+      "title": "Files d'attente Celery",
+      "description": "Disposition des files et moniteur Flower en direct pour les tâches d'arrière-plan.",
+      "queueCount": "Files configurées",
+      "monitor": "Moniteur en direct",
+      "workerQueues": "Files workers",
+      "priorityTiers": "6 niveaux de priorité",
+      "flowerTitle": "Moniteur Celery Flower",
+      "queueCritical": "Ops urgentes",
+      "queueIngest": "Ingestion fichiers",
+      "queueRefresh": "Sync connecteurs",
+      "queueAi": "IA / embeddings",
+      "queueNotifications": "Alertes",
+      "queueMaintenance": "Rollups / DR",
+      "totalDepth": "Profondeur totale",
+      "dataSource": "Source des métriques",
+      "placeholder": "Placeholder",
+      "empty": "Aucune métrique de file disponible."
+    },
+    "branding": {
+      "title": "Image de marque",
+      "displayName": "Nom affiché",
+      "primaryColor": "Couleur principale",
+      "primaryHover": "Survol principal",
+      "accentColor": "Couleur d'accent",
+      "logoUrl": "URL du logo (https)",
+      "preview": "Aperçu en direct",
+      "previewHint": "Les couleurs s'appliquent au portail public après enregistrement.",
+      "sampleButton": "Bouton exemple",
+      "save": "Enregistrer",
+      "saving": "Enregistrement…",
+      "saved": "Image de marque enregistrée.",
+      "loading": "Chargement…",
+      "loadFailed": "Échec du chargement",
+      "saveFailed": "Échec de l'enregistrement"
+    }
+  },
+  "developer": {
+    "shellTitle": "Développeur",
+    "nav": {
+      "overview": "Vue d'ensemble",
+      "apiKeys": "Clés API",
+      "webhooks": "Webhooks",
+      "openapi": "OpenAPI",
+      "sdk": "SDK",
+      "rateLimits": "Limites de débit"
+    },
+    "overview": {
+      "title": "Console développeur",
+      "description": "Gérez les clés API et les intégrations pour ce locataire.",
+      "apiKeyCount": "Clés API : {{count}}",
+      "quickStart": "Démarrage rapide (Python)"
+    },
+    "apiKeys": {
+      "title": "Clés API",
+      "description": "Créez et révoquez des clés à portée limitée pour l'accès programmatique."
+    },
+    "rateLimits": {
+      "title": "Limites de débit",
+      "description": "Utilisation par clé par rapport aux limites du plan locataire.",
+      "tenantLimit": "Limite locataire (req/min)",
+      "activeKeys": "Clés API actives",
+      "totalUsed": "Requêtes dernière minute",
+      "peakUtilization": "Utilisation maximale",
+      "perMin": "req/min",
+      "remaining": "{{count}} restantes · {{pct}}% utilisé",
+      "empty": "Aucune clé API",
+      "emptyDescription": "Créez une clé API pour voir les jauges d'utilisation."
+    },
+    "explorer": {
+      "title": "Explorateur OpenAPI",
+      "descriptionGlobal": "Documentation interactive de l'API plateforme (Swagger UI).",
+      "titleDataset": "Explorateur API du jeu de données",
+      "descriptionDataset": "Spécification OpenAPI 3.1 auto-générée pour un jeu publié.",
+      "viewDataset": "Voir la page du jeu",
+      "loading": "Chargement de la spec OpenAPI…",
+      "empty": "Aucune spec OpenAPI disponible.",
+      "specVersion": "Version OpenAPI",
+      "apiVersion": "Version API",
+      "pathCount": "Chemins",
+      "iframeTitle": "Documentation OpenAPI plateforme"
+    }
+  },
+  "search": {
+    "paletteLabel": "Palette de commandes",
+    "palettePlaceholder": "Rechercher des jeux de données…",
+    "paletteHint": "Ctrl+K · Échap pour fermer",
+    "searching": "Recherche…",
+    "noResults": "Aucun résultat",
+    "related": "Connexe",
+    "exactMatch": "Correspondance"
+  },
+  "chat": {
+    "title": "Discuter avec le jeu de données",
+    "description": "Posez des questions sur les données. Les réponses citent la requête sous-jacente lorsque disponible.",
+    "placeholder": "ex. Combien de lignes ? Quelles colonnes ?",
+    "ask": "Demander",
+    "thinking": "Réflexion…",
+    "failed": "Échec du chat",
+    "aiBadge": "IA",
+    "confidence": "Confiance {{percent}}%",
+    "lowConfidence": "Faible confiance — vérifiez les données source.",
+    "citationColumns": "Colonnes citées"
+  },
+  "feedback": {
+    "title": "Évaluer ce jeu de données",
+    "ratingLabel": "Note",
+    "stars": "{{count}} étoiles",
+    "commentLabel": "Commentaire (optionnel)",
+    "commentPlaceholder": "Comment utilisez-vous ces données ?",
+    "submit": "Envoyer",
+    "sending": "Envoi…",
+    "submitFailed": "Échec de l'envoi",
+    "thankYou": "Merci — votre avis a été enregistré."
+  },
+  "publisher": {
+    "shellTitle": "Publieur",
+    "dashboard": {
+      "title": "Tableau de bord du publieur",
+      "description": "Vos jeux de données, statut du workflow et actions rapides.",
+      "publishNew": "Publier un nouveau jeu de données",
+      "loading": "Chargement de vos jeux de données…",
+      "loadFailed": "Échec du chargement des jeux de données",
+      "empty": "Aucun jeu de données pour le moment",
+      "emptyDescription": "Créez un brouillon et téléversez un fichier pour démarrer le workflow de publication.",
+      "yourDatasets": "Vos jeux de données",
+      "views": "Vues",
+      "aiQueries": "Requêtes IA"
+    },
+    "timeline": {
+      "title": "Activité du workflow",
+      "description": "Événements de gouvernance récents sur vos jeux de données.",
+      "loading": "Chargement de l'historique…",
+      "loadFailed": "Impossible de charger l'historique",
+      "empty": "Aucun événement de workflow pour le moment.",
+      "viewDataset": "Voir le jeu de données"
+    },
+    "staleness": {
+      "title": "{{count}} jeu(x) de données à surveiller",
+      "description": "Certains jeux peuvent être obsolètes ou en attente de rafraîchissement.",
+      "descriptionStale": "{{stale}} jeu(x) marqué(s) obsolète(s) — vérifiez et rafraîchissez.",
+      "more": "+{{count}} de plus"
+    },
+    "feedback": {
+      "title": "Avis des citoyens",
+      "loading": "Chargement des avis…",
+      "empty": "Aucun avis sur vos jeux de données publiés pour le moment.",
+      "stars": "{{count}}★"
+    }
+  }
+}

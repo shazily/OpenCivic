@@ -12,22 +12,28 @@ from app.services.platform.tenant_provisioning_service import TenantProvisioning
 
 
 @pytest.mark.asyncio
-async def test_create_tenant_requires_admin(client: AsyncClient) -> None:
+async def test_create_tenant_requires_admin(
+    client: AsyncClient,
+    auth_headers: dict[str, str],
+) -> None:
     response = await client.post(
         "/api/v1/admin/tenants",
         json={"slug": "demo-agency", "display_name": "Demo Agency"},
-        headers={"Authorization": "Bearer dev-local-token-change-me"},
+        headers=auth_headers,
     )
     assert response.status_code == 403
 
 
 @pytest.mark.asyncio
-async def test_create_tenant_as_admin(client: AsyncClient) -> None:
+async def test_create_tenant_as_admin(
+    client: AsyncClient,
+    admin_headers: dict[str, str],
+) -> None:
     slug = f"agency-{uuid.uuid4().hex[:8]}"
     response = await client.post(
         "/api/v1/admin/tenants",
         json={"slug": slug, "display_name": "Test Agency"},
-        headers={"Authorization": "Bearer dev-admin-token-change-me"},
+        headers=admin_headers,
     )
     assert response.status_code == 201
     body = response.json()["data"]

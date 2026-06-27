@@ -142,7 +142,7 @@ async def scim_webhook_event(request: Request) -> dict:
             reason=f"scim_webhook_{normalized}",
         )
         await session.commit()
-        logger.info("scim_webhook_processed", user_id=str(user.id), event=body.event)
+        logger.info("scim_webhook_processed", user_id=str(user.id), scim_event=body.event)
         return {
             "data": {"user_id": str(user.id), "status": "suspended", "event": body.event},
             "meta": {},

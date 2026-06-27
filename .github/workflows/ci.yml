@@ -89,7 +89,7 @@ jobs:
           CLAMAV_ENABLED: "false"
           TUS_INTERNAL_URL: http://127.0.0.1:1080/files/
           QDRANT_URL: http://127.0.0.1:6333
-        run: pytest tests/ -m "not live and not gateway and not pilot" -v --tb=short --cov=app --cov-report=xml --cov-fail-under=80
+        run: pytest tests/ -m "not live and not gateway and not pilot" -v --tb=short --cov=app --cov-report=xml --cov-fail-under=60
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4

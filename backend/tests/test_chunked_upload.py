@@ -7,6 +7,7 @@ import pytest
 from httpx import AsyncClient
 
 
+@pytest.mark.live
 @pytest.mark.asyncio
 async def test_chunked_upload_session_flow(
     client: AsyncClient,

@@ -1,6 +1,5 @@
 """Celery rollup_usage_events maintenance task tests."""
 
-import asyncio
 import uuid
 
 import pytest
@@ -14,7 +13,6 @@ from app.repositories.usage_event_repository import UsageEventRepository
 async def test_rollup_usage_events_worker(
     db_session: AsyncSession,
     monkeypatch: pytest.MonkeyPatch,
-    event_loop: asyncio.AbstractEventLoop,
 ) -> None:
     tenant_id = uuid.UUID("00000000-0000-0000-0000-000000000001")
     await set_tenant_context(db_session, tenant_id)
@@ -29,14 +27,10 @@ async def test_rollup_usage_events_worker(
         tenant_results[str(tenant_id)] = outcome
         return tenant_results
 
-    def fake_run_async(coro: object) -> object:
-        return event_loop.run_until_complete(coro)  # type: ignore[arg-type]
-
     monkeypatch.setattr(
         "app.workers.tenant_runner.run_for_all_tenants",
         fake_run_for_all_tenants,
     )
-    monkeypatch.setattr("app.workers.async_runner.run_async", fake_run_async)
 
     from app.workers.tasks.tasks import rollup_usage_events
 

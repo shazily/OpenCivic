@@ -5,6 +5,8 @@ from unittest.mock import AsyncMock
 import pytest
 from httpx import AsyncClient
 
+from app.core.cache import reset_cache_client
+
 
 class _FakeRedis:
     def __init__(self) -> None:
@@ -22,6 +24,7 @@ class _FakeRedis:
 
 @pytest.mark.asyncio
 async def test_rate_limit_headers_and_429(client: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    reset_cache_client()
     fake = _FakeRedis()
     monkeypatch.setattr(
         "app.services.auth.edge_rate_limit.get_cache",
@@ -42,6 +45,7 @@ async def test_rate_limit_headers_and_429(client: AsyncClient, monkeypatch: pyte
 
 @pytest.mark.asyncio
 async def test_rate_limit_exempt_health(client: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
+    reset_cache_client()
     fake = _FakeRedis()
     monkeypatch.setattr(
         "app.services.auth.edge_rate_limit.get_cache",

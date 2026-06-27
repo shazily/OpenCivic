@@ -23,6 +23,9 @@ os.environ.setdefault("DEV_ADMIN_USER_ID", "00000000-0000-0000-0000-000000000011
 os.environ.setdefault("DEV_ADMIN_AUTH_TOKEN", "test-admin-token")
 os.environ.setdefault("DEV_DEVELOPER_USER_ID", "00000000-0000-0000-0000-000000000012")
 os.environ.setdefault("DEV_DEVELOPER_AUTH_TOKEN", "test-developer-token")
+os.environ.setdefault("OPENCIVIC_DEV_AUTH_TOKEN", os.environ["DEV_AUTH_TOKEN"])
+os.environ.setdefault("OPENCIVIC_STEWARD_AUTH_TOKEN", os.environ["DEV_STEWARD_AUTH_TOKEN"])
+os.environ.setdefault("OPENCIVIC_ADMIN_AUTH_TOKEN", os.environ["DEV_ADMIN_AUTH_TOKEN"])
 os.environ.setdefault("SCIM_WEBHOOK_SECRET", "dev-scim-secret-change-me")
 os.environ.setdefault("EDGE_RATE_LIMIT_ENABLED", "false")
 os.environ.setdefault("GATEWAY_RATE_LIMIT_ENABLED", "false")
@@ -57,6 +60,29 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker
 from sqlalchemy.pool import NullPool
 
 
+def _ensure_extensions() -> None:
+    """Create Postgres extensions required before Alembic migrations."""
+    from sqlalchemy import create_engine, text
+
+    migration_url = os.environ.get(
+        "DATABASE_MIGRATION_URL",
+        os.environ.get(
+            "DATABASE_WRITE_URL",
+            os.environ.get(
+                "DATABASE_URL",
+                "postgresql+asyncpg://opencivic:password@postgres:5432/opencivic",
+            ),
+        ),
+    )
+    sync_url = migration_url.replace("+asyncpg", "")
+    engine = create_engine(sync_url)
+    with engine.begin() as conn:
+        conn.execute(text('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"'))
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm"))
+        conn.execute(text("CREATE EXTENSION IF NOT EXISTS pgcrypto"))
+    engine.dispose()
+
+
 def _run_migrations() -> None:
     env = os.environ.copy()
     env["DATABASE_URL"] = env.get(
@@ -84,6 +110,7 @@ def apply_migrations() -> None:
     from app.core.config import get_settings
 
     get_settings.cache_clear()
+    _ensure_extensions()
     _run_migrations()
 
 

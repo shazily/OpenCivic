@@ -1,7 +1,5 @@
 """Extended backup verification task tests."""
 
-import asyncio
-import json
 from unittest.mock import MagicMock
 
 import pytest
@@ -29,10 +27,7 @@ async def test_verify_backup_integrity_writes_cache(monkeypatch: pytest.MonkeyPa
 
 def test_verify_backup_integrity_runs_pgbackrest(
     monkeypatch: pytest.MonkeyPatch,
-    event_loop: asyncio.AbstractEventLoop,
 ) -> None:
-    import asyncio
-
     stored: dict[str, str] = {}
 
     async def fake_cache_set(key: str, value: str, ttl_seconds: int = 0) -> None:
@@ -48,11 +43,6 @@ def test_verify_backup_integrity_runs_pgbackrest(
     monkeypatch.setattr("app.core.config.settings.PGBACKREST_STANZA", "opencivic")
     monkeypatch.setattr("app.core.config.settings.PGBACKREST_COMMAND", "pgbackrest")
     monkeypatch.setattr("subprocess.run", lambda *args, **kwargs: mock_result)
-
-    def fake_run_async(coro: object) -> object:
-        return event_loop.run_until_complete(coro)  # type: ignore[arg-type]
-
-    monkeypatch.setattr("app.workers.async_runner.run_async", fake_run_async)
 
     from app.workers.tasks.tasks import verify_backup_integrity
 

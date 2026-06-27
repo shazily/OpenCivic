@@ -115,8 +115,8 @@ bootstrap() {
   compose run --rm --no-deps api python scripts/seed_dev.py
 
   if [[ "$OPENCIVIC_MODE" == "pilot" ]]; then
-    wait_for_container_healthy "${KEYCLOAK_CONTAINER}" 300
-    wait_for_url "http://127.0.0.1:${KEYCLOAK_MGMT_PORT}/health/ready" "keycloak-mgmt" 60
+    wait_for_url "http://127.0.0.1:${KEYCLOAK_MGMT_PORT}/health/ready" "keycloak-mgmt" 180
+    wait_for_url "http://127.0.0.1:${KEYCLOAK_PORT}/realms/dev" "keycloak-realm" 60
   fi
 
   log "Starting application stack..."

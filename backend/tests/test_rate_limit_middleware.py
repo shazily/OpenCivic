@@ -1,45 +1,38 @@
 """Edge rate-limit middleware tests."""
 
-import uuid
+import time
 from unittest.mock import AsyncMock
 
 import pytest
 from httpx import AsyncClient
 
 from app.core.cache import reset_cache_client
-
-
-class _FakeRedis:
-    def __init__(self) -> None:
-        self.count = 0
-
-    async def incr(self, key: str) -> int:
-        del key
-        self.count += 1
-        return self.count
-
-    async def expire(self, key: str, ttl: int) -> bool:
-        del key, ttl
-        return True
+from app.services.auth.edge_rate_limit import RateLimitDecision
 
 
 @pytest.mark.asyncio
 async def test_rate_limit_headers_and_429(client: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
     reset_cache_client()
-    fake = _FakeRedis()
-    monkeypatch.setattr(
-        "app.services.auth.edge_rate_limit.get_cache",
-        AsyncMock(return_value=fake),
-    )
-    monkeypatch.setattr("app.core.rate_limit_middleware.settings.EDGE_RATE_LIMIT_ENABLED", True)
-    monkeypatch.setattr("app.services.auth.edge_rate_limit.settings.DEFAULT_API_RATE_LIMIT_PER_MIN", 1)
+    calls = {"count": 0}
+    reset_epoch = int(time.time()) + 60
 
-    unique_auth = {"Authorization": f"Bearer rate-limit-{uuid.uuid4()}"}
-    first = await client.get("/api/v1/datasets/", headers=unique_auth)
+    async def fake_consume_rate_limit(**_kwargs) -> RateLimitDecision:
+        calls["count"] += 1
+        if calls["count"] == 1:
+            return RateLimitDecision(allowed=True, limit=1, remaining=0, reset_epoch=reset_epoch)
+        return RateLimitDecision(allowed=False, limit=1, remaining=0, reset_epoch=reset_epoch)
+
+    monkeypatch.setattr("app.core.rate_limit_middleware.settings.EDGE_RATE_LIMIT_ENABLED", True)
+    monkeypatch.setattr(
+        "app.core.rate_limit_middleware.consume_rate_limit",
+        fake_consume_rate_limit,
+    )
+
+    first = await client.get("/api/v1/datasets/")
     assert first.status_code in (200, 401, 403)
     assert first.headers.get("X-RateLimit-Limit") == "1"
 
-    second = await client.get("/api/v1/datasets/", headers=unique_auth)
+    second = await client.get("/api/v1/datasets/")
     assert second.status_code == 429
     assert second.headers.get("X-RateLimit-Remaining") == "0"
     assert second.json()["errors"][0]["code"] == "RATE_LIMIT_EXCEEDED"
@@ -48,13 +41,18 @@ async def test_rate_limit_headers_and_429(client: AsyncClient, monkeypatch: pyte
 @pytest.mark.asyncio
 async def test_rate_limit_exempt_health(client: AsyncClient, monkeypatch: pytest.MonkeyPatch) -> None:
     reset_cache_client()
-    fake = _FakeRedis()
-    monkeypatch.setattr(
-        "app.services.auth.edge_rate_limit.get_cache",
-        AsyncMock(return_value=fake),
-    )
     monkeypatch.setattr("app.core.rate_limit_middleware.settings.EDGE_RATE_LIMIT_ENABLED", True)
-    monkeypatch.setattr("app.services.auth.edge_rate_limit.settings.DEFAULT_API_RATE_LIMIT_PER_MIN", 1)
+    monkeypatch.setattr(
+        "app.core.rate_limit_middleware.consume_rate_limit",
+        AsyncMock(
+            return_value=RateLimitDecision(
+                allowed=True,
+                limit=1,
+                remaining=0,
+                reset_epoch=int(time.time()) + 60,
+            )
+        ),
+    )
 
     for _ in range(3):
         response = await client.get("/api/v1/health/live")

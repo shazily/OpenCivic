@@ -150,7 +150,6 @@ async def patch_admin_branding(
         actor_id=current_user.user_id,
         payload={"keys": list(updates.keys())},
     )
-    await session.commit()
 
     payload = _branding_from_tenant(tenant)
     return {"data": payload.model_dump(), "meta": {}, "errors": []}

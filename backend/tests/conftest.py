@@ -1,10 +1,10 @@
 """Pytest fixtures — migrations, seed data, HTTP client."""
-import asyncio
 import os
 import subprocess
 import sys
 import uuid
-from collections.abc import AsyncGenerator, Iterator
+from collections.abc import AsyncGenerator
+from contextlib import AsyncExitStack
 from pathlib import Path
 
 BACKEND_ROOT = Path(__file__).resolve().parents[1]
@@ -30,8 +30,8 @@ os.environ.setdefault("AI_MODE", "disabled")
 os.environ.setdefault("DEPLOYMENT_MODE", "selfhosted")
 os.environ["CELERY_TASK_ALWAYS_EAGER"] = "true"
 os.environ["CLAMAV_ENABLED"] = "false"
-os.environ.setdefault("DATABASE_POOL_SIZE", "2")
-os.environ.setdefault("DATABASE_MAX_OVERFLOW", "0")
+os.environ.setdefault("DATABASE_POOL_SIZE", "5")
+os.environ.setdefault("DATABASE_MAX_OVERFLOW", "2")
 os.environ.setdefault("GATEWAY_AUTH_SECRET", "test-gateway-secret")
 os.environ.setdefault("EDGE_AUTH_ENABLED", "false")
 os.environ.setdefault("MINIO_ENDPOINT", "http://localhost:9000")
@@ -50,9 +50,10 @@ else:
     os.environ.setdefault("VALKEY_URL", "redis://localhost:6379/0")
 
 import pytest
+import pytest_asyncio
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.pool import NullPool
 
 
@@ -78,14 +79,6 @@ def _run_migrations() -> None:
     )
 
 
-@pytest.fixture(scope="session")
-def event_loop() -> Iterator[asyncio.AbstractEventLoop]:
-    """Single event loop for the whole test session (async SQLAlchemy pools)."""
-    loop = asyncio.new_event_loop()
-    yield loop
-    loop.close()
-
-
 @pytest.fixture(scope="session", autouse=True)
 def apply_migrations() -> None:
     from app.core.config import get_settings
@@ -104,8 +97,8 @@ def admin_headers() -> dict[str, str]:
     return {"Authorization": f"Bearer {os.environ['DEV_ADMIN_AUTH_TOKEN']}"}
 
 
-@pytest.fixture(scope="session")
-def test_engine():
+@pytest_asyncio.fixture(scope="session", loop_scope="session")
+async def test_engine() -> AsyncGenerator[AsyncEngine, None]:
     from app.core.config import settings
 
     engine = create_async_engine(
@@ -114,89 +107,82 @@ def test_engine():
         poolclass=NullPool,
     )
     yield engine
+    await engine.dispose()
 
 
-@pytest.fixture(scope="session", autouse=True)
-def dispose_test_engine(test_engine, event_loop) -> Iterator[None]:
-    yield
-    event_loop.run_until_complete(test_engine.dispose())
-
-
-@pytest.fixture(scope="session", autouse=True)
-def seed_dev_tenant(test_engine, event_loop) -> None:
+@pytest_asyncio.fixture(scope="session", loop_scope="session", autouse=True)
+async def seed_dev_tenant(test_engine: AsyncEngine) -> AsyncGenerator[None, None]:
     """Seed platform/tenant rows once per session."""
     from app.db.models import Licence, Tenant, User
     from app.db.session import set_tenant_context
 
-    async def _seed() -> None:
-        factory = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
-        tenant_id = uuid.UUID(os.environ["DEV_TENANT_ID"])
-        user_id = uuid.UUID(os.environ["DEV_USER_ID"])
-        licence_id = uuid.UUID(os.environ["DEV_LICENCE_ID"])
-        async with factory() as session:
-            existing = await session.scalar(select(Tenant).where(Tenant.id == tenant_id))
-            if existing is None:
-                session.add(
-                    Tenant(
-                        id=tenant_id,
-                        slug="dev",
-                        display_name="Test Tenant",
-                        tier="standard",
-                        status="active",
-                    )
+    factory = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
+    tenant_id = uuid.UUID(os.environ["DEV_TENANT_ID"])
+    user_id = uuid.UUID(os.environ["DEV_USER_ID"])
+    licence_id = uuid.UUID(os.environ["DEV_LICENCE_ID"])
+    async with factory() as session:
+        existing = await session.scalar(select(Tenant).where(Tenant.id == tenant_id))
+        if existing is None:
+            session.add(
+                Tenant(
+                    id=tenant_id,
+                    slug="dev",
+                    display_name="Test Tenant",
+                    tier="standard",
+                    status="active",
                 )
-            await set_tenant_context(session, tenant_id)
-            existing_user = await session.scalar(select(User).where(User.id == user_id))
-            if existing_user is None:
+            )
+        await set_tenant_context(session, tenant_id)
+        existing_user = await session.scalar(select(User).where(User.id == user_id))
+        if existing_user is None:
+            session.add(
+                User(
+                    id=user_id,
+                    tenant_id=tenant_id,
+                    keycloak_user_id="test-publisher",
+                    email="publisher@test.local",
+                    name="Test Publisher",
+                    roles=["data_publisher"],
+                )
+            )
+        for extra_id, email, roles in (
+            (uuid.UUID(os.environ["DEV_STEWARD_USER_ID"]), "steward@test.local", ["data_steward"]),
+            (uuid.UUID(os.environ["DEV_ADMIN_USER_ID"]), "admin@test.local", ["org_admin"]),
+            (uuid.UUID(os.environ["DEV_DEVELOPER_USER_ID"]), "developer@test.local", ["developer"]),
+        ):
+            existing_extra = await session.scalar(select(User).where(User.id == extra_id))
+            if existing_extra is None:
                 session.add(
                     User(
-                        id=user_id,
+                        id=extra_id,
                         tenant_id=tenant_id,
-                        keycloak_user_id="test-publisher",
-                        email="publisher@test.local",
-                        name="Test Publisher",
-                        roles=["data_publisher"],
+                        keycloak_user_id=f"test-{extra_id}",
+                        email=email,
+                        name=email.split("@")[0],
+                        roles=roles,
                     )
                 )
-            for extra_id, email, roles in (
-                (uuid.UUID(os.environ["DEV_STEWARD_USER_ID"]), "steward@test.local", ["data_steward"]),
-                (uuid.UUID(os.environ["DEV_ADMIN_USER_ID"]), "admin@test.local", ["org_admin"]),
-                (uuid.UUID(os.environ["DEV_DEVELOPER_USER_ID"]), "developer@test.local", ["developer"]),
-            ):
-                existing_extra = await session.scalar(select(User).where(User.id == extra_id))
-                if existing_extra is None:
-                    session.add(
-                        User(
-                            id=extra_id,
-                            tenant_id=tenant_id,
-                            keycloak_user_id=f"test-{extra_id}",
-                            email=email,
-                            name=email.split("@")[0],
-                            roles=roles,
-                        )
-                    )
-            existing_licence = await session.scalar(select(Licence).where(Licence.id == licence_id))
-            if existing_licence is None:
-                session.add(
-                    Licence(
-                        id=licence_id,
-                        tenant_id=tenant_id,
-                        name="Test Licence",
-                    )
+        existing_licence = await session.scalar(select(Licence).where(Licence.id == licence_id))
+        if existing_licence is None:
+            session.add(
+                Licence(
+                    id=licence_id,
+                    tenant_id=tenant_id,
+                    name="Test Licence",
                 )
-            await session.commit()
+            )
+        await session.commit()
+    yield
 
-    event_loop.run_until_complete(_seed())
 
-
-@pytest.fixture
-async def db_session(test_engine) -> AsyncGenerator[AsyncSession, None]:
+@pytest_asyncio.fixture
+async def db_session(test_engine: AsyncEngine) -> AsyncGenerator[AsyncSession, None]:
     factory = async_sessionmaker(test_engine, class_=AsyncSession, expire_on_commit=False)
     async with factory() as session:
         yield session
 
 
-@pytest.fixture
+@pytest_asyncio.fixture(scope="session", loop_scope="session")
 async def client() -> AsyncGenerator[AsyncClient, None]:
     from app.core.cache import reset_cache_client
     from app.core.config import get_settings
@@ -204,28 +190,29 @@ async def client() -> AsyncGenerator[AsyncClient, None]:
 
     get_settings.cache_clear()
     reset_cache_client()
-    transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://testserver") as http_client:
+    async with AsyncExitStack() as stack:
+        await stack.enter_async_context(app.router.lifespan_context(app))
+        transport = ASGITransport(app=app)
+        http_client = await stack.enter_async_context(
+            AsyncClient(transport=transport, base_url="http://testserver")
+        )
         yield http_client
 
 
-@pytest.fixture(scope="session", autouse=True)
-def dispose_app_engines_at_end(event_loop) -> Iterator[None]:
+@pytest_asyncio.fixture(scope="session", loop_scope="session", autouse=True)
+async def dispose_app_engines_at_end() -> AsyncGenerator[None, None]:
     """Dispose FastAPI SQLAlchemy engines once per session (not per test)."""
     yield
+    from app.db.session import reset_engines
 
-    async def _dispose() -> None:
-        from app.db.session import reset_engines
-
-        await reset_engines()
-
-    event_loop.run_until_complete(_dispose())
+    await reset_engines()
 
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def other_tenant_dataset(db_session: AsyncSession) -> uuid.UUID:
     """Dataset row owned by a different tenant for RLS isolation tests."""
     from app.db.models import Dataset, Tenant, User
+    from app.db.session import set_tenant_context
 
     other_tenant_id = uuid.uuid4()
     other_user_id = uuid.uuid4()
@@ -241,8 +228,6 @@ async def other_tenant_dataset(db_session: AsyncSession) -> uuid.UUID:
         )
     )
     await db_session.flush()
-    from app.db.session import set_tenant_context
-
     await set_tenant_context(db_session, other_tenant_id)
     db_session.add(
         User(

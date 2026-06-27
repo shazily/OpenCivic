@@ -6,7 +6,6 @@ from typing import AsyncGenerator
 import structlog
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.responses import JSONResponse
 
 from app.api.v1.router import api_router
@@ -48,7 +47,7 @@ def create_application() -> FastAPI:
         lifespan=lifespan,
     )
 
-    app.add_middleware(GZipMiddleware, minimum_size=1000)
+    register_http_middlewares(app)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,

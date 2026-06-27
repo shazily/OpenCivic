@@ -13,7 +13,7 @@
 
 | Job | Command / check | Status |
 |-----|-----------------|--------|
-| Backend test | `pytest tests/ --cov-fail-under=80` | Required |
+| Backend test | `pytest tests/ -m "not live and not gateway and not pilot" --cov-fail-under=80` | Required |
 | Backend lint | `ruff check app/` | Required |
 | Security | `pip-audit -r requirements.txt` (zero HIGH/CRITICAL) | Required |
 | Security | `bandit -r app/` | Advisory |

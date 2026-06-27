@@ -38,6 +38,8 @@ os.environ.setdefault("MINIO_ENDPOINT", "http://localhost:9000")
 os.environ.setdefault("MINIO_ACCESS_KEY", "minioadmin")
 os.environ.setdefault("MINIO_SECRET_KEY", "minioadmin")
 os.environ.setdefault("MINIO_BUCKET", "opencivic-test")
+os.environ.setdefault("TUS_INTERNAL_URL", "http://127.0.0.1:1080/files/")
+os.environ.setdefault("QDRANT_URL", "http://127.0.0.1:6333")
 _valkey_password = os.environ.get("VALKEY_PASSWORD", "")
 if _valkey_password:
     os.environ.setdefault(

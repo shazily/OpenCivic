@@ -23,7 +23,8 @@ ignore_missing_imports = true
 asyncio_mode = "auto"
 pythonpath = ["."]
 testpaths = ["tests"]
-addopts = "--tb=short --cov=app --cov-report=term-missing"
+addopts = "--tb=short"
+timeout = 120
 markers = [
     "live: tests requiring live external services (Minio, tusd, Ollama)",
     "gateway: tests requiring nginx/APISIX gateway path",

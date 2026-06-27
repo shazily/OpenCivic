@@ -24,12 +24,15 @@ def _qdrant_client_available() -> bool:
 
 
 def _qdrant_reachable() -> bool:
+    base = (settings.QDRANT_URL or "").strip()
+    if not base:
+        return False
     try:
         headers: dict[str, str] = {}
         if settings.QDRANT_API_KEY:
             headers["api-key"] = settings.QDRANT_API_KEY
         response = httpx.get(
-            f"{settings.QDRANT_URL.rstrip('/')}/collections",
+            f"{base.rstrip('/')}/collections",
             headers=headers,
             timeout=3.0,
         )

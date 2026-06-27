@@ -15,6 +15,7 @@ def _tusd_reachable() -> bool:
         return False
 
 
+@pytest.mark.live
 @pytest.mark.skipif(not _tusd_reachable(), reason="tusd not reachable")
 def test_tusd_endpoint_reachable() -> None:
     base = settings.TUS_INTERNAL_URL.rstrip("/")

@@ -27,6 +27,7 @@ def _encode_metadata(meta: dict[str, str]) -> str:
     )
 
 
+@pytest.mark.live
 @pytest.mark.asyncio
 @pytest.mark.skipif(not _tusd_reachable(), reason="tusd not reachable")
 async def test_tus_upload_copy_e2e(monkeypatch: pytest.MonkeyPatch) -> None:

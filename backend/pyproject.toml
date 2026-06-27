@@ -25,6 +25,7 @@ pythonpath = ["."]
 testpaths = ["tests"]
 addopts = "--tb=short"
 timeout = 120
+timeout_method = "thread"
 markers = [
     "live: tests requiring live external services (Minio, tusd, Ollama)",
     "gateway: tests requiring nginx/APISIX gateway path",

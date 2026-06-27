@@ -41,12 +41,14 @@ def _qdrant_reachable() -> bool:
         return False
 
 
+@pytest.mark.live
 @pytest.mark.asyncio
 @pytest.mark.skipif(not _qdrant_reachable(), reason="Qdrant not reachable")
 async def test_qdrant_connection() -> None:
     await verify_qdrant_connection()
 
 
+@pytest.mark.live
 @pytest.mark.asyncio
 @pytest.mark.skipif(
     not _qdrant_reachable() or not _qdrant_client_available(),

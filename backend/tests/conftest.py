@@ -74,6 +74,7 @@ def _run_migrations() -> None:
         cwd=BACKEND_ROOT,
         check=True,
         env=env,
+        timeout=300,
     )
 
 

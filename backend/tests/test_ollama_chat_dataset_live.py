@@ -25,6 +25,7 @@ def _ollama_reachable() -> bool:
         return False
 
 
+@pytest.mark.live
 @pytest.mark.asyncio
 @pytest.mark.skipif(not _ollama_reachable(), reason="Ollama not reachable")
 async def test_ollama_chat_dataset_columns_live(

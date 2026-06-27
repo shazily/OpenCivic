@@ -14,6 +14,7 @@ API_PORT="${OPENCIVIC_API_PORT:-8100}"
 GATEWAY_PORT="${OPENCIVIC_GATEWAY_PORT:-8088}"
 FRONTEND_PORT="${OPENCIVIC_FRONTEND_PORT:-3100}"
 KEYCLOAK_PORT="${OPENCIVIC_KEYCLOAK_PORT:-8180}"
+KEYCLOAK_MGMT_PORT="${OPENCIVIC_KEYCLOAK_MGMT_PORT:-8181}"
 KEYCLOAK_CONTAINER="${KEYCLOAK_CONTAINER:-opencivic-dev-keycloak}"
 
 compose_files() {
@@ -53,6 +54,7 @@ prepare_env() {
     echo "OPENCIVIC_GATEWAY_PORT=${GATEWAY_PORT}"
     echo "OPENCIVIC_FRONTEND_PORT=${FRONTEND_PORT}"
     echo "OPENCIVIC_KEYCLOAK_PORT=${KEYCLOAK_PORT}"
+    echo "OPENCIVIC_KEYCLOAK_MGMT_PORT=${KEYCLOAK_MGMT_PORT}"
     echo "KEYCLOAK_ADMIN_PASSWORD=admin-change-me"
     echo "KEYCLOAK_CLIENT_SECRET=pilot-client-secret-change-me"
   } >> .env
@@ -113,8 +115,8 @@ bootstrap() {
   compose run --rm --no-deps api python scripts/seed_dev.py
 
   if [[ "$OPENCIVIC_MODE" == "pilot" ]]; then
-    wait_for_container_healthy "${KEYCLOAK_CONTAINER}" 420
-    wait_for_url "http://127.0.0.1:${KEYCLOAK_PORT}/health/ready" "keycloak-http" 60
+    wait_for_container_healthy "${KEYCLOAK_CONTAINER}" 300
+    wait_for_url "http://127.0.0.1:${KEYCLOAK_MGMT_PORT}/health/ready" "keycloak-mgmt" 60
   fi
 
   log "Starting application stack..."
@@ -153,11 +155,14 @@ playwright_smoke() {
   OPENCIVIC_MODE="$mode"
   export OPENCIVIC_MODE
 
-  clean_frontend_host_artifacts
-
   log "Running Playwright (mode=${mode})..."
   (
     cd "$ROOT_DIR/frontend"
+    if [[ ! -x node_modules/.bin/playwright ]]; then
+      log "Playwright binary missing — running npm ci..."
+      npm ci
+      npm run test:e2e:install
+    fi
     export OPENCIVIC_FRONTEND_URL="http://127.0.0.1:${FRONTEND_PORT}"
     export OPENCIVIC_API_URL="http://127.0.0.1:${GATEWAY_PORT}/api/v1"
 

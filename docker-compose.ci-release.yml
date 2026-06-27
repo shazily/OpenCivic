@@ -23,11 +23,15 @@ services:
     profiles: [ci-clamav]
 
   keycloak:
+    ports: !reset
+      - "${OPENCIVIC_KEYCLOAK_PORT:-8180}:8080"
+      - "127.0.0.1:${OPENCIVIC_KEYCLOAK_MGMT_PORT:-8181}:9000"
     environment:
       KC_BOOTSTRAP_ADMIN_USERNAME: admin
       KC_BOOTSTRAP_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_HEALTH_ENABLED: "true"
     healthcheck:
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && echo -e 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\n\\r\\n' >&3 && cat <&3 | grep -q '200'"]
       start_period: 120s
       interval: 10s
       timeout: 10s

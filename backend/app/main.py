@@ -13,12 +13,7 @@ from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.errors import OpenCivicError
 from app.core.logging import configure_logging
-from app.core.middleware import (
-    RequestIDMiddleware,
-    SecurityHeadersMiddleware,
-    TenantContextMiddleware,
-)
-from app.core.rate_limit_middleware import EdgeRateLimitMiddleware
+from app.core.middleware import register_http_middlewares
 
 logger = structlog.get_logger(__name__)
 
@@ -53,9 +48,6 @@ def create_application() -> FastAPI:
         lifespan=lifespan,
     )
 
-    app.add_middleware(SecurityHeadersMiddleware)
-    app.add_middleware(EdgeRateLimitMiddleware)
-    app.add_middleware(RequestIDMiddleware)
     app.add_middleware(GZipMiddleware, minimum_size=1000)
     app.add_middleware(
         CORSMiddleware,
@@ -65,7 +57,7 @@ def create_application() -> FastAPI:
         allow_headers=["Authorization", "Content-Type", "X-Request-ID", "X-Api-Key"],
         expose_headers=["X-Request-ID", "X-RateLimit-Limit", "X-RateLimit-Remaining"],
     )
-    app.add_middleware(TenantContextMiddleware)
+    register_http_middlewares(app)
     app.include_router(api_router, prefix="/api/v1")
 
     @app.exception_handler(OpenCivicError)

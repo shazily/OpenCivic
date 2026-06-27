@@ -38,6 +38,7 @@ async def test_embargo_auto_publish_when_due(db_session: AsyncSession) -> None:
     )
     await db_session.commit()
 
+    await set_tenant_context(db_session, tenant_id)
     service = WorkflowService(db_session, tenant_id)
     released = await service.check_embargo_releases()
     await db_session.commit()

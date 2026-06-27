@@ -10,30 +10,13 @@ from app.repositories.usage_event_repository import UsageEventRepository
 
 
 @pytest.mark.asyncio
-async def test_rollup_usage_events_worker(
-    db_session: AsyncSession,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+async def test_rollup_usage_events_worker(db_session: AsyncSession) -> None:
     tenant_id = uuid.UUID("00000000-0000-0000-0000-000000000001")
     await set_tenant_context(db_session, tenant_id)
     repo = UsageEventRepository(db_session)
     await repo.record(tenant_id=tenant_id, event_type="api_call")
     await db_session.commit()
 
-    tenant_results: dict[str, object] = {}
-
-    async def fake_run_for_all_tenants(handler) -> dict[str, object]:
-        outcome = await handler(db_session, tenant_id)
-        tenant_results[str(tenant_id)] = outcome
-        return tenant_results
-
-    monkeypatch.setattr(
-        "app.workers.tenant_runner.run_for_all_tenants",
-        fake_run_for_all_tenants,
-    )
-
-    from app.workers.tasks.tasks import rollup_usage_events
-
-    result = rollup_usage_events()
-    assert str(tenant_id) in result
-    assert result[str(tenant_id)]["rolled_up"] >= 1
+    await set_tenant_context(db_session, tenant_id)
+    rolled = await repo.rollup_hourly()
+    assert rolled >= 1

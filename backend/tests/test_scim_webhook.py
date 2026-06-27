@@ -64,6 +64,7 @@ async def test_scim_suspend_revokes_api_keys(db_session: AsyncSession) -> None:
     await scim_service.suspend_user(db_session, user, reason="test_suspend")
     await db_session.commit()
 
+    await set_tenant_context(db_session, tenant_id)
     refreshed_key = await db_session.scalar(select(ApiKey).where(ApiKey.id == api_key.id))
     assert refreshed_key is not None
     assert refreshed_key.revoked_at is not None

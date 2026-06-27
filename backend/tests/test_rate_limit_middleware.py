@@ -1,5 +1,6 @@
 """Edge rate-limit middleware tests."""
 
+import uuid
 from unittest.mock import AsyncMock
 
 import pytest
@@ -33,11 +34,12 @@ async def test_rate_limit_headers_and_429(client: AsyncClient, monkeypatch: pyte
     monkeypatch.setattr("app.core.rate_limit_middleware.settings.EDGE_RATE_LIMIT_ENABLED", True)
     monkeypatch.setattr("app.services.auth.edge_rate_limit.settings.DEFAULT_API_RATE_LIMIT_PER_MIN", 1)
 
-    first = await client.get("/api/v1/datasets/")
+    unique_auth = {"Authorization": f"Bearer rate-limit-{uuid.uuid4()}"}
+    first = await client.get("/api/v1/datasets/", headers=unique_auth)
     assert first.status_code in (200, 401, 403)
     assert first.headers.get("X-RateLimit-Limit") == "1"
 
-    second = await client.get("/api/v1/datasets/")
+    second = await client.get("/api/v1/datasets/", headers=unique_auth)
     assert second.status_code == 429
     assert second.headers.get("X-RateLimit-Remaining") == "0"
     assert second.json()["errors"][0]["code"] == "RATE_LIMIT_EXCEEDED"

@@ -9,6 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.errors import InvalidToken
 from app.db.models import User
+from app.db.session import set_tenant_context
 from app.services.auth.refresh_service import RefreshService
 
 
@@ -28,6 +29,7 @@ async def test_scim_suspend_revokes_refresh_sessions(db_session: AsyncSession) -
     session = await refresh_service.load_session(token)
     assert session.user_id == developer_id
 
+    await set_tenant_context(db_session, tenant_id)
     user = await db_session.scalar(select(User).where(User.id == developer_id))
     assert user is not None
 
@@ -37,6 +39,7 @@ async def test_scim_suspend_revokes_refresh_sessions(db_session: AsyncSession) -
     with pytest.raises(InvalidToken):
         await refresh_service.load_session(token)
 
+    await set_tenant_context(db_session, tenant_id)
     await db_session.execute(
         update(User).where(User.id == developer_id).values(status="active")
     )
